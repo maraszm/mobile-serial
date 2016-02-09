@@ -40,12 +40,6 @@ public class Response {
         this.bytes = Arrays.copyOf(bytes, expectedBytesNumber);
     }
 
-//    private boolean isValueFromByteNumberEqual(int byteNumber, int value) {
-//        checkIndex(byteNumber);
-//        byte byteValue = bytes[byteNumber];
-//        return (byteValue & 0xFF) == value;
-//    }
-
     public float convertBytesOfNumberToFloat(int highNumberByte, int lowNumberByte) {
         checkIndex(highNumberByte);
         checkIndex(lowNumberByte);
