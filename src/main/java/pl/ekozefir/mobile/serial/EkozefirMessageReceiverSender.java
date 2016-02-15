@@ -25,17 +25,17 @@ import pl.ekozefir.mobile.serial.centralcommand.value.ParameterRequestCommand;
  * @author Michal Marasz
  */
 public final class EkozefirMessageReceiverSender {
-
+    
     private static final Logger log = Logger.getLogger(EkozefirMessageReceiverSender.class);
     private static final List<Character> ekotouchCentralNames = Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H');
     private static final char digitalStandardCentralName = 'X';
     private final EkozefirSerialConnection serial;
-
+    
     public EkozefirMessageReceiverSender(final EkozefirSerialConnection serial) {
         this.serial = serial;
     }
-
-    public Optional<Response> sendMessage(final MobileCommand command) {
+    
+    public Optional<Response> sendAndReceiveMessage(final MobileCommand command) {
         serial.sendMessage(command);
         Optional<byte[]> maybeBytes = serial.receiveBytes();
         if (maybeBytes.isPresent()) {
@@ -50,24 +50,28 @@ public final class EkozefirMessageReceiverSender {
         }
         return Optional.empty();
     }
+    
+    public void sendMessage(final MobileCommand command) {
+        serial.sendMessage(command);
+    }
 
     public void start() {
         serial.connect();
     }
-
+    
     public void stop() {
         serial.disconnect();
     }
-
+    
     public List<Response> getEkotouchCentrals() {
         return ekotouchCentralNames.stream().
-                map((centralName) -> sendMessage(new ParameterRequestCommand(centralName))).
+                map((centralName) -> sendAndReceiveMessage(new ParameterRequestCommand(centralName))).
                 filter(optional -> optional.isPresent()).
                 map(optional -> optional.get()).
                 collect(Collectors.toCollection(ArrayList::new));
     }
-
+    
     public Optional<Response> getStandardDigitalCentralIfAvailable() {
-        return sendMessage(new ParameterRequestCommand(digitalStandardCentralName));
+        return sendAndReceiveMessage(new ParameterRequestCommand(digitalStandardCentralName));
     }
 }

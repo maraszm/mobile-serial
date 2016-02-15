@@ -22,7 +22,7 @@ import static pl.ekozefir.mobile.serial.connection.SerialConnectionHelper.toStri
 public final class EkozefirByteReceiverSender {
 
     private static final Logger log = Logger.getLogger(EkozefirByteReceiverSender.class);
-    private static final int preambuleReadTries = 5;
+    private static final int preambuleReadTries = 10;
     private static final int preambuleTimeout = 100;
     private static final int preambleLength = 1;
     private static final int messageLength = 50;

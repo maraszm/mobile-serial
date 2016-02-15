@@ -17,7 +17,7 @@ import pl.ekozefir.mobile.serial.centralstate.MobileParser;
  *
  * @author Michal Marasz  
  */
-public class ExtracAirEfficiencyParser implements MobileParser {
+public class ExtractAirEfficiencyParser implements MobileParser {
 
     private static final int byteNumber = 5;
 
@@ -26,8 +26,4 @@ public class ExtracAirEfficiencyParser implements MobileParser {
         return new ParsedValue(response.convertByteOfNumberToInt(byteNumber));
     }
 
-//    @Override
-//    public String getId() {
-//        return "extract_air";
-//    }
 }

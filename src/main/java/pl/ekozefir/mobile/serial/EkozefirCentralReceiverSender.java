@@ -45,9 +45,9 @@ public final class EkozefirCentralReceiverSender {
                                         new RawSerialConnection(baud, device)))));
     }
 
-    public Optional<Response> sendMessage(MobileCommand command) {
+    public Optional<Response> sendAndReceiveMessage(MobileCommand command) {
         Future<Optional<Response>> message = service.submit(() -> {
-            return receiverSender.sendMessage(command);
+            return receiverSender.sendAndReceiveMessage(command);
         });
         try {
             return message.get(timeout, TimeUnit.SECONDS);
@@ -55,6 +55,10 @@ public final class EkozefirCentralReceiverSender {
             log.error("Error while sending message", ex);
             return Optional.empty();
         }
+    }
+
+    public void sendMessage(MobileCommand command) {
+        service.submit(() -> receiverSender.sendMessage(command));
     }
 
     public List<Response> receiveCentralList() {
