@@ -25,14 +25,14 @@ public class MessageBuilder {
         this.messageType = (byte) messageType;
     }
 
-    private byte[] messageOfBytes(int byte0, int byte1, int byte2, int byte3) {
+    private MobileCommand messageOfBytes(int byte0, int byte1, int byte2, int byte3) {
         byte[] bytes = new byte[5];
         bytes[0] = (byte) byte0;
         bytes[1] = (byte) byte1;
         bytes[2] = (byte) byte2;
         bytes[3] = (byte) byte3;
         bytes[4] = calculateCrc(bytes);
-        return bytes;
+        return new MobileCommand(bytes);
     }
 
     private byte convertFloatToHighByte(float value) {
@@ -69,7 +69,7 @@ public class MessageBuilder {
         return this;
     }
 
-    public byte[] build() {
+    public MobileCommand build() {
         return messageOfBytes(messageType, firstParam, secondParam, thirdParam);
     }
 

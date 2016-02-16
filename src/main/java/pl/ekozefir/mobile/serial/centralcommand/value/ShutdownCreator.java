@@ -8,25 +8,21 @@
  * Contributors:
  *    Michal Marasz - initial API and implementation and/or initial documentation
  */
-package pl.ekozefir.mobile.serial.centralcommand;
+package pl.ekozefir.mobile.serial.centralcommand.value;
 
-import java.util.Arrays;
-import java.util.Objects;
+import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
+import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
+import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
 
 /**
  *
  * @author Michal Marasz
  */
-public class MobileCommand {
+public class ShutdownCreator implements MobileCreator {
 
-    private final byte[] command;
-
-    public MobileCommand(byte[] command) {
-        Objects.requireNonNull(command);
-        this.command = Arrays.copyOf(command, command.length);
+    @Override
+    public MobileCommand create(MobileParameter mobileParameter) {
+        return new MobileCommand(new byte[5]);
     }
 
-    public byte[] getCommand() {
-        return Arrays.copyOf(command, command.length);
-    }
 }

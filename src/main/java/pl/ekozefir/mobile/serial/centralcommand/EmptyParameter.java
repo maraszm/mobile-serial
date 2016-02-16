@@ -10,23 +10,15 @@
  */
 package pl.ekozefir.mobile.serial.centralcommand;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 /**
  *
  * @author Michal Marasz
  */
-public class MobileCommand {
+public class EmptyParameter implements MobileParameter {
 
-    private final byte[] command;
-
-    public MobileCommand(byte[] command) {
-        Objects.requireNonNull(command);
-        this.command = Arrays.copyOf(command, command.length);
+    @Override
+    public Object getValue() {
+        throw new IllegalStateException("Empty parameter");
     }
-
-    public byte[] getCommand() {
-        return Arrays.copyOf(command, command.length);
-    }
+    
 }

@@ -57,7 +57,7 @@ public final class EkozefirSerialConnection {
     }
 
     public void sendMessage(final MobileCommand command) {
-        ekozefirConnection.sendMessage(command.createCommand());
+        ekozefirConnection.sendMessage(command.getCommand());
     }
 
     public void connect() {

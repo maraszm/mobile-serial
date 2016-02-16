@@ -10,23 +10,13 @@
  */
 package pl.ekozefir.mobile.serial.centralcommand;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 /**
  *
  * @author Michal Marasz
+ * @param <T>
  */
-public class MobileCommand {
+public interface MobileParameter<T> {
 
-    private final byte[] command;
+    T getValue();
 
-    public MobileCommand(byte[] command) {
-        Objects.requireNonNull(command);
-        this.command = Arrays.copyOf(command, command.length);
-    }
-
-    public byte[] getCommand() {
-        return Arrays.copyOf(command, command.length);
-    }
 }

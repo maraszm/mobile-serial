@@ -18,7 +18,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
-import pl.ekozefir.mobile.serial.centralcommand.value.ParameterRequestCommand;
+import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
+import pl.ekozefir.mobile.serial.centralcommand.MobileParameterImpl;
+import pl.ekozefir.mobile.serial.centralcommand.value.ParameterRequestCreator;
 
 /**
  *
@@ -65,13 +67,13 @@ public final class EkozefirMessageReceiverSender {
     
     public List<Response> getEkotouchCentrals() {
         return ekotouchCentralNames.stream().
-                map((centralName) -> sendAndReceiveMessage(new ParameterRequestCommand(centralName))).
+                map((centralName) -> sendAndReceiveMessage(new ParameterRequestCreator().create(new MobileParameterImpl<>(centralName)))).
                 filter(optional -> optional.isPresent()).
                 map(optional -> optional.get()).
                 collect(Collectors.toCollection(ArrayList::new));
     }
     
     public Optional<Response> getStandardDigitalCentralIfAvailable() {
-        return sendAndReceiveMessage(new ParameterRequestCommand(digitalStandardCentralName));
+        return sendAndReceiveMessage(new ParameterRequestCreator().create(new MobileParameterImpl<>(digitalStandardCentralName)));
     }
 }
