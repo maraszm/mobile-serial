@@ -10,6 +10,7 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
+import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import pl.ekozefir.mobile.serial.centralstate.Response;

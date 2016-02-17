@@ -10,8 +10,6 @@
  */
 package pl.ekozefir.mobile.serial.centralstate;
 
-import pl.ekozefir.mobile.serial.centralstate.value.ParsedValue;
-
 /**
  *
  * @author Michal Marasz

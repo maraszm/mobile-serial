@@ -10,6 +10,7 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
+import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
 
@@ -17,10 +18,10 @@ import pl.ekozefir.mobile.serial.centralstate.MobileParser;
  *
  * @author Michal Marasz  
  */
-public class RecirculationEuipmentState implements MobileParser {
+public class HeaterCoolantEquipmentParser implements MobileParser {
 
     private static final int byteNumber = 46;
-    private static final int bitShift = 4;
+    private static final int bitShift = 3;
     private static final int bitMask = 1;
 
     @Override
