@@ -18,8 +18,10 @@ import pl.ekozefir.mobile.serial.centralstate.MobileParser;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
+ * Only for backward compatibility. Joined with {@link HeatingCoolingModeParser} to {@link FunctionParser}
  */
+@Deprecated
 public class HeatingCoolingStatusParser implements MobileParser {
 
     private static final Map<Integer, String> values = ImmutableMap.of(0, "HEATING", 1, "COOLING", 2, "NONE");

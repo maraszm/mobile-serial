@@ -17,9 +17,9 @@ package pl.ekozefir.mobile.serial.centralstate;
 public abstract class TempParser implements MobileParser {
 
     private static final int lackOfTempSensor = 0xF1;
-    private static final String lackOfTempSensorText = "lack_of_temp_sensor";
+    private static final String lackOfTempSensorText = "NO_SENSOR";
     private static final int damageOfTempSensor = 0xF0;
-    private static final String damageOfTempSensorText = "damage_of_temp_sensor";
+    private static final String damageOfTempSensorText = "SENSOR_ERROR";
     
 
     public ParsedValue parseTemp(Response response, int highByteNumber, int lowByteNumber) {

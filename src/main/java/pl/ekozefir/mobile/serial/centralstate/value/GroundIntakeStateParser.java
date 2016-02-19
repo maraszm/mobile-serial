@@ -11,8 +11,6 @@
 package pl.ekozefir.mobile.serial.centralstate.value;
 
 import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
 
