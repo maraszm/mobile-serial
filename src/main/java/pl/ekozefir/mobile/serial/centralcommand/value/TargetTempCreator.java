@@ -13,7 +13,6 @@ package pl.ekozefir.mobile.serial.centralcommand.value;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
 
 /**
  *
@@ -24,8 +23,8 @@ public class TargetTempCreator implements MobileCreator<Float> {
     private static final int type = 0x06;
 
     @Override
-    public MobileCommand create(MobileParameter<Float> mobileParameter) {
-        return MessageBuilder.setType(type).appendFirstAndSecondParameter(mobileParameter.getValue()).build();
+    public MobileCommand create(Float mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstAndSecondParameter(mobileParameter).build();
     }
 
 }

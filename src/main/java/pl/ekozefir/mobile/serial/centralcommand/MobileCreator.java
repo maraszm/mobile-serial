@@ -16,5 +16,5 @@ package pl.ekozefir.mobile.serial.centralcommand;
  */
 public interface MobileCreator<T> {
 
-    MobileCommand create(MobileParameter<T> mobileParameter);
+    MobileCommand create(T mobileParameter, char centralId);
 }

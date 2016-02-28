@@ -10,40 +10,47 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
 import com.google.common.collect.ImmutableMap;
-import java.util.Map;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import java.util.Collection;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToCollection;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment;
+import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.ELECTRIC;
+import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.ELECTRIC_2UNIT;
+import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.EVAPORATOR;
+import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.EXCHANGER_3POINT;
+import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.NONE;
+import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.WATER_3POINT;
+import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.WATER_THERMAL;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class HeaterEquipmentParser implements MobileParser {
+public class HeaterEquipmentParser implements MobileParser<HeaterEquipment> {
 
-    private static final Map<Integer, String> values = ImmutableMap.<Integer, String>builder().
-            put(2, "ELECTRIC").
-            put(6, "ELECTRIC").
-            put(9, "ELECTRIC").
-            put(13, "ELECTRIC").
-            put(3, "WATER_3POINT").
-            put(10, "WATER_3POINT").
-            put(12, "WATER_3POINT").
-            put(4, "WATER_THERMAL").
-            put(7, "WATER_THERMAL").
-            put(11, "WATER_THERMAL").
-            put(14, "EVAPORATOR").
-            put(15, "ELECTRIC_2UNIT").
-            put(16, "EXCHANGER_3POINT").
-            put(17, "EXCHANGER_3POINT").
-            build();
-    private static final String none = "NONE";
+    public enum HeaterEquipment {
+        ELECTRIC, WATER_3POINT, WATER_THERMAL, EVAPORATOR, ELECTRIC_2UNIT, EXCHANGER_3POINT, NONE;
+    }
+    private static final InverseEnumMap<HeaterEquipment, Integer> values = new InverseEnumMapToCollection(
+            Maps.immutableEnumMap(ImmutableMap.<HeaterEquipment, Collection>builder().
+                    put(ELECTRIC, ImmutableSet.of(2, 6, 9, 13)).
+                    put(WATER_3POINT, ImmutableSet.of(3, 10, 12)).
+                    put(WATER_THERMAL, ImmutableSet.of(4, 7, 11)).
+                    put(EVAPORATOR, ImmutableSet.of(14)).
+                    put(ELECTRIC_2UNIT, ImmutableSet.of(15)).
+                    put(EXCHANGER_3POINT, ImmutableSet.of(16, 17)).
+                    build()
+            ), NONE);
     private static final int byteNumber = 47;
 
     @Override
-    public ParsedValue parse(Response response) {
-        return new ParsedValue(values.getOrDefault(response.convertByteOfNumberToInt(byteNumber), none));
+    public HeaterEquipment parse(Response response) {
+        return values.find(response.convertByteOfNumberToInt(byteNumber));
     }
 
 }

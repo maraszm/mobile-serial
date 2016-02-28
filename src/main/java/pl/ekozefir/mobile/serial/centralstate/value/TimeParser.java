@@ -10,7 +10,6 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import pl.ekozefir.mobile.serial.centralstate.Response;
@@ -20,13 +19,13 @@ import pl.ekozefir.mobile.serial.centralstate.MobileParser;
  *
  * @author Michal Marasz  
  */
-public class TimeParser implements MobileParser {
+public class TimeParser implements MobileParser<String> {
 
     private static final SimpleDateFormat parserSDF = new SimpleDateFormat("yyyy-M-d HH:mm:ss");
 
     @Override
-    public ParsedValue parse(Response response) {
-        return new ParsedValue(parserSDF.format(new Date()));
+    public String parse(Response response) {
+        return parserSDF.format(new Date());
     }
 
 }

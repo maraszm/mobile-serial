@@ -14,12 +14,12 @@ import pl.ekozefir.mobile.serial.centralstate.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
-import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
-import pl.ekozefir.mobile.serial.centralcommand.MobileParameterImpl;
+import pl.ekozefir.mobile.serial.centralcommand.value.ChangeCentralCreator;
 import pl.ekozefir.mobile.serial.centralcommand.value.ParameterRequestCreator;
 
 /**
@@ -27,32 +27,42 @@ import pl.ekozefir.mobile.serial.centralcommand.value.ParameterRequestCreator;
  * @author Michal Marasz
  */
 public final class EkozefirMessageReceiverSender {
-    
+
     private static final Logger log = Logger.getLogger(EkozefirMessageReceiverSender.class);
     private static final List<Character> ekotouchCentralNames = Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H');
     private static final char digitalStandardCentralName = 'X';
+    private static final byte firstByteOfParameterRequest = (byte) 0xAA;
+    private static final byte secondByteOfParameterRequest = (byte) 0x55;
     private final EkozefirSerialConnection serial;
-    
+
     public EkozefirMessageReceiverSender(final EkozefirSerialConnection serial) {
         this.serial = serial;
     }
-    
+
     public Optional<Response> sendAndReceiveMessage(final MobileCommand command) {
+        log.debug("Try to send and receive message");
+        log.debug("Send message for change central");
+        serial.sendMessage(new ChangeCentralCreator().create(null, command.getCentralId()));
+        log.debug("Sending message");
         serial.sendMessage(command);
-        Optional<byte[]> maybeBytes = serial.receiveBytes();
-        if (maybeBytes.isPresent()) {
-            try {
-                Response message = new Response(maybeBytes.get());
-                return Optional.of(message);
-            } catch (Exception ex) {
-                log.error("Message from central is wrong! Closing application");
+        byte[] commandBytes = command.getCommand();
+        if (commandBytes[0] == firstByteOfParameterRequest && commandBytes[1] == secondByteOfParameterRequest) {
+            log.debug("Waiting for parameters");
+            Optional<byte[]> maybeBytes = serial.receiveBytes();
+            if (maybeBytes.isPresent()) {
+                try {
+                    Response message = new Response(maybeBytes.get());
+                    return Optional.of(message);
+                } catch (Exception ex) {
+                    log.error("Message from central is wrong! Closing application");
+                }
+            } else {
+                log.error("Message from central is not comming!");
             }
-        } else {
-            log.error("Message from central is not comming!");
         }
         return Optional.empty();
     }
-    
+
     public void sendMessage(final MobileCommand command) {
         serial.sendMessage(command);
     }
@@ -60,20 +70,20 @@ public final class EkozefirMessageReceiverSender {
     public void start() {
         serial.connect();
     }
-    
+
     public void stop() {
         serial.disconnect();
     }
-    
+
     public List<Response> getEkotouchCentrals() {
         return ekotouchCentralNames.stream().
-                map((centralName) -> sendAndReceiveMessage(new ParameterRequestCreator().create(new MobileParameterImpl<>(centralName)))).
+                map((centralName) -> sendAndReceiveMessage(new ParameterRequestCreator().create(null, centralName))).
                 filter(optional -> optional.isPresent()).
                 map(optional -> optional.get()).
                 collect(Collectors.toCollection(ArrayList::new));
     }
-    
+
     public Optional<Response> getStandardDigitalCentralIfAvailable() {
-        return sendAndReceiveMessage(new ParameterRequestCreator().create(new MobileParameterImpl<>(digitalStandardCentralName)));
+        return sendAndReceiveMessage(new ParameterRequestCreator().create(null, digitalStandardCentralName));
     }
 }

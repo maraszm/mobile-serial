@@ -10,25 +10,45 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.value.AhuStateParser.AhuState;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class AhuStateParser implements MobileParser {
+public class AhuStateParser implements MobileParser<AhuState> {
 
-    private static final Map<Integer, String> values = ImmutableMap.of(
-            1, "STARTING", 2, "WORK", 3, "SHUTDOWN", 4, "STANDBY", 5, "ALERT");
+    public enum AhuState {
+        STARTING(0x01),
+        WORK(0x02),
+        SHUTDOWN(0x03),
+        STANDBY(0x04),
+        ALERT(0x05);
+
+        private final int parameter;
+
+        private AhuState(int parameter) {
+            this.parameter = parameter;
+        }
+
+        private static AhuState parse(int value) {
+            for (AhuState state : values()) {
+                if (state.parameter == value) {
+                    return state;
+                }
+            }
+            throw new IllegalStateException("Could not find value");
+        }
+
+    }
+
     private static final int byteNumber = 3;
 
     @Override
-    public ParsedValue parse(Response response) {
-        return new ParsedValue(values.get(response.convertByteOfNumberToInt(byteNumber)));
+    public AhuState parse(Response response) {
+        return AhuState.parse(response.convertByteOfNumberToInt(byteNumber));
     }
 
 }

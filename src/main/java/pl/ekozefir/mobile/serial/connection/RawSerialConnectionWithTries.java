@@ -40,6 +40,7 @@ public final class RawSerialConnectionWithTries implements SerialConnection {
 
     @Override
     public Optional<byte[]> receiveBytes(final int bytesNumber) {
+        log.debug("Try to receive bytes");
         for (int loop = 0; loop < tries; loop++) {
             Optional<byte[]> maybeBytes = connection.receiveBytes(bytesNumber);
             if (maybeBytes.isPresent()) {
@@ -54,6 +55,7 @@ public final class RawSerialConnectionWithTries implements SerialConnection {
                 }
             }
         }
+        log.debug("Fail to receive bytes");
         return Optional.empty();
     }
 

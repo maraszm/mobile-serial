@@ -17,22 +17,24 @@ package pl.ekozefir.mobile.serial.centralcommand;
 public class MessageBuilder {
 
     private final byte messageType;
+    private char centralId = 'A';
     private byte firstParam = 0x00;
     private byte secondParam = 0x00;
     private byte thirdParam = 0x00;
 
-    private MessageBuilder(int messageType) {
+    private MessageBuilder(int messageType, char centralId) {
         this.messageType = (byte) messageType;
+        this.centralId = centralId;
     }
 
-    private MobileCommand messageOfBytes(int byte0, int byte1, int byte2, int byte3) {
+    private MobileCommand messageOfBytes(int byte0, int byte1, int byte2, int byte3, char centralId) {
         byte[] bytes = new byte[5];
         bytes[0] = (byte) byte0;
         bytes[1] = (byte) byte1;
         bytes[2] = (byte) byte2;
         bytes[3] = (byte) byte3;
         bytes[4] = calculateCrc(bytes);
-        return new MobileCommand(bytes);
+        return new MobileCommand(bytes, centralId);
     }
 
     private byte convertFloatToHighByte(float value) {
@@ -70,10 +72,10 @@ public class MessageBuilder {
     }
 
     public MobileCommand build() {
-        return messageOfBytes(messageType, firstParam, secondParam, thirdParam);
+        return messageOfBytes(messageType, firstParam, secondParam, thirdParam, centralId);
     }
 
-    public static MessageBuilder setType(int messageType) {
-        return new MessageBuilder(messageType);
+    public static MessageBuilder setType(int messageType, char centralId) {
+        return new MessageBuilder(messageType, centralId);
     }
 }

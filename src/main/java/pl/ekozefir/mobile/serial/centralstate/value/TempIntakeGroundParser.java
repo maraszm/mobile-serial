@@ -10,7 +10,6 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.TempParser;
 
@@ -24,7 +23,7 @@ public class TempIntakeGroundParser extends TempParser {
     private static final int lowByteNumber = 19;
 
     @Override
-    public ParsedValue parse(Response response) {
+    public Object parse(Response response) {
         return parseTemp(response, highByteNumber, lowByteNumber);
     }
 

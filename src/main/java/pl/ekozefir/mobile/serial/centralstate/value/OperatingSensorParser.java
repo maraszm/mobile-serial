@@ -10,33 +10,47 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
-import com.google.common.collect.ImmutableMap;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.value.OperatingSensorParser.OperatingSensor;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class OperatingSensorParser implements MobileParser {
+public class OperatingSensorParser implements MobileParser<OperatingSensor> {
 
-    private static final ImmutableMap<Integer, String> values = ImmutableMap.<Integer, String>builder().
-            put(0b1000, "CONTROLLER_SENSOR_AUTO").
-            put(0b1001, "EXTRACT_SENSOR_AUTO").
-            put(0b1010, "ADDITIONAL_SENSOR_AUTO").
-            put(0b0000, "CONTROLLER_SENSOR_MANUAL").
-            put(0b0001, "SUPPLY_SENSOR_MANUAL").
-            put(0b0010, "ADDITIONAL_SENSOR_MANUAL").
-            put(0b0011, "EXTRACT_SENSOR_MANUAL").
-            build();
+    public enum OperatingSensor {
+        CONTROLLER_SENSOR_AUTO(0b1000),
+        EXTRACT_SENSOR_AUTO(0b1001),
+        ADDITIONAL_SENSOR_AUTO(0b1010),
+        CONTROLLER_SENSOR_MANUAL(0b0000),
+        SUPPLY_SENSOR_MANUAL(0b0001),
+        ADDITIONAL_SENSOR_MANUAL(0b0010),
+        EXTRACT_SENSOR_MANUAL(0b0011);
+
+        private final int parameter;
+
+        private OperatingSensor(int parameter) {
+            this.parameter = parameter;
+        }
+
+        private static OperatingSensor parse(int value) {
+            for (OperatingSensor state : values()) {
+                if (state.parameter == value) {
+                    return state;
+                }
+            }
+            throw new IllegalStateException("Could not find value");
+        }
+    }
     private static final int byteNumber = 40;
     private static final int bitShift = 0;
     private static final int bitMask = 15;
 
     @Override
-    public ParsedValue parse(Response response) {
-        return new ParsedValue(values.get(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask)));
+    public OperatingSensor parse(Response response) {
+        return OperatingSensor.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

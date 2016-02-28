@@ -10,23 +10,42 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.value.FireplaceParser.Fireplace;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class FireplaceParser implements MobileParser {
+public class FireplaceParser implements MobileParser<Fireplace> {
 
+    public enum Fireplace {
+        ON(0x01), OFF(0x00);
+
+        private final int parameter;
+
+        private Fireplace(int parameter) {
+            this.parameter = parameter;
+        }
+
+        private static Fireplace parse(int value) {
+            for (Fireplace state : values()) {
+                if (state.parameter == value) {
+                    return state;
+                }
+            }
+            throw new IllegalStateException("Could not find value");
+        }
+
+    }
     private static final int byteNumber = 37;
     private static final int bitShift = 4;
     private static final int bitMask = 1;
 
     @Override
-    public ParsedValue parse(Response response) {
-        return new ParsedValue(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask) == 1);
+    public Fireplace parse(Response response) {
+        return Fireplace.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

@@ -8,20 +8,12 @@
  * Contributors:
  *    Michal Marasz - initial API and implementation and/or initial documentation
  */
-package pl.ekozefir.mobile.serial.centralcommand.value;
-
-import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
-import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
+package pl.ekozefir.mobile.serial.centralstate;
 
 /**
  *
  * @author Michal Marasz
  */
-public class ShutdownCreator implements MobileCreator {
-
-    @Override
-    public MobileCommand create(Object mobileParameter, char centralId) {
-        return new MobileCommand(new byte[5], centralId);
-    }
-
+public interface InverseEnumMap<T extends Enum, V> {
+    T find(V value);
 }

@@ -19,14 +19,25 @@ import java.util.Objects;
  */
 public class MobileCommand {
 
+    private static final int byteNumber = 5;
     private final byte[] command;
+    private final char centralId;
 
-    public MobileCommand(byte[] command) {
+    public MobileCommand(byte[] command, char centralId) {
         Objects.requireNonNull(command);
+        if (command.length != byteNumber) {
+            throw new IllegalStateException("Wrong number of bytes");
+        }
         this.command = Arrays.copyOf(command, command.length);
+        this.centralId = centralId;
     }
 
     public byte[] getCommand() {
         return Arrays.copyOf(command, command.length);
     }
+    
+    public char getCentralId(){
+        return centralId;
+    }
+    
 }

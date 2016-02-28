@@ -16,30 +16,30 @@ import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.CoolerStateParser.CoolerState;
-import static pl.ekozefir.mobile.serial.centralstate.value.CoolerStateParser.CoolerState.OFF;
-import static pl.ekozefir.mobile.serial.centralstate.value.CoolerStateParser.CoolerState.ON;
+import pl.ekozefir.mobile.serial.centralstate.value.RecirculationEquipmentParser.RecirculationEquipment;
+import static pl.ekozefir.mobile.serial.centralstate.value.RecirculationEquipmentParser.RecirculationEquipment.NONE;
+import static pl.ekozefir.mobile.serial.centralstate.value.RecirculationEquipmentParser.RecirculationEquipment.TRUE;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class CoolerStateParser implements MobileParser<CoolerState> {
+public class RecirculationEquipmentParser implements MobileParser<RecirculationEquipment> {
 
-    public enum CoolerState{
-        ON, OFF;
+    public enum RecirculationEquipment {
+        NONE, TRUE;
     }
-    private static final InverseEnumMap<CoolerState, Integer> values = new InverseEnumMapToValue(
+    private static final InverseEnumMap<RecirculationEquipment, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
-                    ON, 1, OFF, 0
+                    TRUE, 1, NONE, 0
             ))
     );
-    private static final int byteNumber = 39;
-    private static final int bitShift = 6;
+    private static final int byteNumber = 46;
+    private static final int bitShift = 4;
     private static final int bitMask = 1;
 
     @Override
-    public CoolerState parse(Response response) {
+    public RecirculationEquipment parse(Response response) {
         return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 

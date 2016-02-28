@@ -10,23 +10,37 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.value.BypassStateParser.BypassState;
+import static pl.ekozefir.mobile.serial.centralstate.value.BypassStateParser.BypassState.OFF;
+import static pl.ekozefir.mobile.serial.centralstate.value.BypassStateParser.BypassState.ON;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class BypassStateParser implements MobileParser {
+public class BypassStateParser implements MobileParser<BypassState> {
 
+    public enum BypassState {
+        ON, OFF;
+    }
+    private static final InverseEnumMap<BypassState, Integer> values = new InverseEnumMapToValue(
+            Maps.immutableEnumMap(ImmutableMap.of(
+                    ON, 1, OFF, 0
+            ))
+    );
     private static final int byteNumber = 38;
     private static final int bitShift = 5;
     private static final int bitMask = 1;
 
     @Override
-    public ParsedValue parse(Response response) {
-        return new ParsedValue(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask) == 1);
+    public BypassState parse(Response response) {
+        return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

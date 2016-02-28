@@ -13,20 +13,30 @@ package pl.ekozefir.mobile.serial.centralcommand.value;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
+import pl.ekozefir.mobile.serial.centralcommand.value.FunctionCreator.Function;
 
 /**
  *
  * @author Michal Marasz
  */
-public class TimeProgrammerOnCreator implements MobileCreator {
+public class FunctionCreator implements MobileCreator<Function> {
 
-    private static final int type = 0x09;
-    private static final int parameter = 0x01;
+    public enum Function {
+        AUTO(0x03), COOLING(0x01), RECOVERY(0x02), HEATING(0x00);
+
+        private final int parameter;
+
+        private Function(int parameter) {
+            this.parameter = parameter;
+        }
+
+    }
+
+    private static final int type = 0x0C;
 
     @Override
-    public MobileCommand create(MobileParameter mobileParameter) {
-        return MessageBuilder.setType(type).appendFirstParameter(parameter).build();
+    public MobileCommand create(Function mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
     }
 
 }

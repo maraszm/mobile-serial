@@ -10,26 +10,42 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.value.OperatingModeParser.OperatingMode;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class OperatingModeParser implements MobileParser {
+public class OperatingModeParser implements MobileParser<OperatingMode> {
 
-    private static final Map<Integer, String> values = ImmutableMap.of(0, "MANUAL", 1, "AUTO");
+    public enum OperatingMode {
+        MANUAL(0), AUTO(1);
+
+        private final int parameter;
+
+        private OperatingMode(int parameter) {
+            this.parameter = parameter;
+        }
+
+        private static OperatingMode parse(int value) {
+            for (OperatingMode state : values()) {
+                if (state.parameter == value) {
+                    return state;
+                }
+            }
+            throw new IllegalStateException("Could not find value");
+        }
+
+    }
     private static final int byteNumber = 40;
     private static final int bitShift = 3;
     private static final int bitMask = 1;
 
     @Override
-    public ParsedValue parse(Response response) {
-        return new ParsedValue(values.get(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask)));
+    public OperatingMode parse(Response response) {
+        return OperatingMode.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

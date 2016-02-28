@@ -25,4 +25,8 @@ public class ParsedValue<T> {
     public String toText() {
         return value.toString();
     }
+    
+    public T get(){
+        return value;
+    }
 }

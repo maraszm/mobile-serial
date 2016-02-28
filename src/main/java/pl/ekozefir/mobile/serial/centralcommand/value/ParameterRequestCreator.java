@@ -13,19 +13,18 @@ package pl.ekozefir.mobile.serial.centralcommand.value;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
 
 /**
  *
  * @author Michal Marasz
  */
-public class ParameterRequestCreator implements MobileCreator<Character> {
+public class ParameterRequestCreator implements MobileCreator {
 
     private static final int type = 0xAA;
     private static final int param = 0x55;
 
     @Override
-    public MobileCommand create(MobileParameter<Character> mobileParameter) {
-            return MessageBuilder.setType(type).appendFirstParameter(param).appendSecondParameter(mobileParameter.getValue()).build();
+    public MobileCommand create(Object mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(param).appendSecondParameter(centralId).build();
     }
 }

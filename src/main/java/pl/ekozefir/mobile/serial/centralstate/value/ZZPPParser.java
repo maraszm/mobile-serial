@@ -12,28 +12,25 @@ package pl.ekozefir.mobile.serial.centralstate.value;
 
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.ControlTypeParser.ControlType;
+import pl.ekozefir.mobile.serial.centralstate.value.ZZPPParser.ZZPP;
 
 /**
  *
- * @author Michal Marasz
+ * @author Michal Marasz  
  */
-public class ControlTypeParser implements MobileParser<ControlType> {
+public class ZZPPParser implements MobileParser<ZZPP> {
 
-    public enum ControlType {
-        DIGITAL_E(69),
-        DIGITAL_G(72),
-        DIGITAL_O(79),
-        STANDARD(89);
+    public enum ZZPP {
+        ZZPP1(0b001), ZZPP2(0b010), ZZPP3(0b100), NONE(0b00);
 
         private final int parameter;
 
-        private ControlType(int parameter) {
+        private ZZPP(int parameter) {
             this.parameter = parameter;
         }
 
-        private static ControlType parse(int value) {
-            for (ControlType state : values()) {
+        private static ZZPP parse(int value) {
+            for (ZZPP state : values()) {
                 if (state.parameter == value) {
                     return state;
                 }
@@ -42,12 +39,13 @@ public class ControlTypeParser implements MobileParser<ControlType> {
         }
 
     }
-
-    private static final int byteNumber = 1;
+    private static final int byteNumber = 37;
+    private static final int bitShift = 5;
+    private static final int bitMask = 0b111;
 
     @Override
-    public ControlType parse(Response response) {
-        return ControlType.parse(response.convertByteOfNumberToInt(byteNumber));
+    public ZZPP parse(Response response) {
+        return ZZPP.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

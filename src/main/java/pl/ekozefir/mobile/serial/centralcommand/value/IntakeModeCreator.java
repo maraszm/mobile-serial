@@ -13,20 +13,30 @@ package pl.ekozefir.mobile.serial.centralcommand.value;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
+import pl.ekozefir.mobile.serial.centralcommand.value.IntakeModeCreator.IntakeMode;
 
 /**
  *
  * @author Michal Marasz
  */
-public class OperatingSensorControllerAutoCreator implements MobileCreator {
+public class IntakeModeCreator implements MobileCreator<IntakeMode> {
 
-    private static final int type = 0x07;
-    private static final int parameter = 0x03;
+    public enum IntakeMode {
+        AUTO(0x00), GROUND(0x02), WALL(0x01);
+
+        private final int parameter;
+
+        private IntakeMode(int parameter) {
+            this.parameter = parameter;
+        }
+
+    }
+
+    private static final int type = 0x0B;
 
     @Override
-    public MobileCommand create(MobileParameter mobileParameter) {
-        return MessageBuilder.setType(type).appendFirstParameter(parameter).build();
+    public MobileCommand create(IntakeMode mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
     }
 
 }

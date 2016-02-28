@@ -10,23 +10,41 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
+import java.util.stream.Stream;
 import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.value.HeaterCoolantEquipmentParser.HeaterCoolantEquipment;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class HeaterCoolantEquipmentParser implements MobileParser {
+public class HeaterCoolantEquipmentParser implements MobileParser<HeaterCoolantEquipment> {
 
+    public enum HeaterCoolantEquipment {
+        TRUE(0x01), NONE(0x00);
+
+        private final int parameter;
+
+        private HeaterCoolantEquipment(int parameter) {
+            this.parameter = parameter;
+        }
+
+        private static HeaterCoolantEquipment parse(int value) {
+            return Stream.of(values()).
+                    filter(parameter -> parameter.parameter == value).
+                    findAny().orElseThrow(() -> new IllegalStateException("Could not find value"));
+        }
+
+    }
     private static final int byteNumber = 46;
     private static final int bitShift = 3;
     private static final int bitMask = 1;
 
     @Override
-    public ParsedValue parse(Response response) {
-        return new ParsedValue(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask) == 1);
+    public HeaterCoolantEquipment parse(Response response) {
+        return HeaterCoolantEquipment.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

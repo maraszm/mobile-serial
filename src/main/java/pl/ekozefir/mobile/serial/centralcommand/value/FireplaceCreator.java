@@ -13,20 +13,28 @@ package pl.ekozefir.mobile.serial.centralcommand.value;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
+import pl.ekozefir.mobile.serial.centralcommand.value.FireplaceCreator.FireplaceMode;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class BypassModeAutoCreator implements MobileCreator {
+public class FireplaceCreator implements MobileCreator<FireplaceMode> {
 
-    private static final int type = 0x0A;
-    private static final int parameter = 0x02;
+    public enum FireplaceMode {
+        OFF(0x00), ON(0x02);
+
+        private final int parameter;
+
+        private FireplaceMode(int parameter) {
+            this.parameter = parameter;
+        }
+    }
+    private static final int type = 0x08;
 
     @Override
-    public MobileCommand create(MobileParameter mobileParameter) {
-        return MessageBuilder.setType(type).appendFirstParameter(parameter).build();
+    public MobileCommand create(FireplaceMode mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
     }
 
 }

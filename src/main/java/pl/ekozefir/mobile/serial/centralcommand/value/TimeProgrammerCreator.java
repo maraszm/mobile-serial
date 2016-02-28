@@ -13,20 +13,29 @@ package pl.ekozefir.mobile.serial.centralcommand.value;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
+import pl.ekozefir.mobile.serial.centralcommand.value.TimeProgrammerCreator.TimeProgrammer;
 
 /**
  *
  * @author Michal Marasz
  */
-public class TurnOffCreator implements MobileCreator {
+public class TimeProgrammerCreator implements MobileCreator<TimeProgrammer> {
 
-    private static final int type = 0x01;
-    private static final int param = 0x01;
+    public enum TimeProgrammer {
+        ON(0x01), OFF(0x00);
+
+        private final int parameter;
+
+        private TimeProgrammer(int parameter) {
+            this.parameter = parameter;
+        }
+
+    }
+    private static final int type = 0x09;
 
     @Override
-    public MobileCommand create(MobileParameter mobileParameter) {
-        return MessageBuilder.setType(type).appendFirstParameter(param).build();
+    public MobileCommand create(TimeProgrammer mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
     }
 
 }

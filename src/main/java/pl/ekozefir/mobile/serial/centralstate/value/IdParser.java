@@ -10,7 +10,6 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
 
@@ -18,13 +17,13 @@ import pl.ekozefir.mobile.serial.centralstate.MobileParser;
  *
  * @author Michal Marasz  
  */
-public class IdParser implements MobileParser {
+public class IdParser implements MobileParser<Character> {
 
     private static final int byteNumber = 2;
 
     @Override
-    public ParsedValue<String> parse(Response response) {
-        return new ParsedValue(String.valueOf((char) response.convertByteOfNumberToInt(byteNumber)));
+    public Character parse(Response response) {
+        return (char)response.convertByteOfNumberToInt(byteNumber);
     }
 
 }

@@ -13,20 +13,29 @@ package pl.ekozefir.mobile.serial.centralcommand.value;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
+import pl.ekozefir.mobile.serial.centralcommand.value.RecirculationCreator.Recirculation;
 
 /**
  *
  * @author Michal Marasz
  */
-public class FunctionAutoCreator implements MobileCreator {
+public class RecirculationCreator implements MobileCreator<Recirculation> {
 
-    private static final int type = 0x0C;
-    private static final int parameter = 0x03;
+        public enum Recirculation {
+        ON(0x01), OFF(0x00);
+
+        private final int parameter;
+
+        private Recirculation(int parameter) {
+            this.parameter = parameter;
+        }
+
+    }
+    private static final int type = 0x0D;
 
     @Override
-    public MobileCommand create(MobileParameter mobileParameter) {
-        return MessageBuilder.setType(type).appendFirstParameter(parameter).build();
+    public MobileCommand create(Recirculation mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
     }
 
 }

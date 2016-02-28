@@ -10,23 +10,42 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.value.PreheaterEquipmentParser.PreheaterEquipment;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class PreheaterEquipmentParser implements MobileParser {
+public class PreheaterEquipmentParser implements MobileParser<PreheaterEquipment> {
 
+    public enum PreheaterEquipment {
+        NONE(0x00), TRUE(0x01);
+
+        private final int parameter;
+
+        private PreheaterEquipment(int parameter) {
+            this.parameter = parameter;
+        }
+
+        private static PreheaterEquipment parse(int value) {
+            for (PreheaterEquipment state : values()) {
+                if (state.parameter == value) {
+                    return state;
+                }
+            }
+            throw new IllegalStateException("Could not find value");
+        }
+
+    }
     private static final int byteNumber = 46;
     private static final int bitShift = 7;
     private static final int bitMask = 1;
 
     @Override
-    public ParsedValue parse(Response response) {
-        return new ParsedValue(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask) == 1);
+    public PreheaterEquipment parse(Response response) {
+        return PreheaterEquipment.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

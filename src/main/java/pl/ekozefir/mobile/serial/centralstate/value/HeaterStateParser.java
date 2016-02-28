@@ -10,23 +10,40 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
+import java.util.stream.Stream;
 import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.value.HeaterStateParser.HeaterState;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class HeaterStateParser implements MobileParser {
+public class HeaterStateParser implements MobileParser<HeaterState> {
 
+    public enum HeaterState {
+        ON(0x01), OFF(0x00);
+
+        private final int parameter;
+
+        private HeaterState(int parameter) {
+            this.parameter = parameter;
+        }
+
+        private static HeaterState parse(int value) {
+            return Stream.of(values()).
+                    filter(parameter -> parameter.parameter == value).
+                    findAny().orElseThrow(() -> new IllegalStateException("Could not find value"));
+        }
+
+    }
     private static final int byteNumber = 39;
     private static final int bitShift = 7;
     private static final int bitMask = 1;
 
     @Override
-    public ParsedValue parse(Response response) {
-        return new ParsedValue(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask) == 1);
+    public HeaterState parse(Response response) {
+        return HeaterState.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

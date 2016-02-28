@@ -12,10 +12,10 @@ package pl.ekozefir.mobile.serial.centralstate;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
 public interface MobileParser<T> {
 
-    ParsedValue<T> parse(Response response);
-
+    T parse(Response response);
+    
 }

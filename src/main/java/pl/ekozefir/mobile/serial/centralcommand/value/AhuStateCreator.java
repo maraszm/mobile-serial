@@ -13,20 +13,29 @@ package pl.ekozefir.mobile.serial.centralcommand.value;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.MobileParameter;
+import pl.ekozefir.mobile.serial.centralcommand.value.AhuStateCreator.AhuState;
 
 /**
  *
  * @author Michal Marasz
  */
-public class OperatingSensorControllerManualCreator implements MobileCreator {
+public class AhuStateCreator implements MobileCreator<AhuState> {
 
-    private static final int type = 0x07;
-    private static final int parameter = 0;
+    public enum AhuState {
+        ON(0x00), OFF(0x01);
+
+        private final int parameter;
+
+        private AhuState(int parameter) {
+            this.parameter = parameter;
+        }
+
+    }
+    private static final int type = 0x01;
 
     @Override
-    public MobileCommand create(MobileParameter mobileParameter) {
-        return MessageBuilder.setType(type).appendFirstParameter(parameter).build();
+    public MobileCommand create(AhuState mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
     }
 
 }

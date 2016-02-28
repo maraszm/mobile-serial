@@ -16,21 +16,34 @@ package pl.ekozefir.mobile.serial.centralstate;
  */
 public abstract class TempParser implements MobileParser {
 
-    private static final int lackOfTempSensor = 0xF1;
-    private static final String lackOfTempSensorText = "NO_SENSOR";
-    private static final int damageOfTempSensor = 0xF0;
-    private static final String damageOfTempSensorText = "SENSOR_ERROR";
-    
+    public enum TempError {
 
-    public ParsedValue parseTemp(Response response, int highByteNumber, int lowByteNumber) {
+        NO_SENSOR(0xF1), SENSOR_ERROR(0xF0);
+
+        private final int parameter;
+
+        private TempError(int parameter) {
+            this.parameter = parameter;
+        }
+
+        public boolean check(int valueLow, int valueHigh) {
+            if (parameter == valueLow && parameter == valueHigh) {
+                return true;
+            }
+            return false;
+        }
+
+    }
+
+    public Object parseTemp(Response response, int highByteNumber, int lowByteNumber) {
         int highByteValue = response.convertByteOfNumberToInt(highByteNumber);
         int lowByteValue = response.convertByteOfNumberToInt(lowByteNumber);
-        if (highByteValue == lackOfTempSensor && lowByteValue == lackOfTempSensor) {
-            return new ParsedValue(lackOfTempSensorText);
+        if (TempError.NO_SENSOR.check(highByteValue, lowByteValue)) {
+            return TempError.NO_SENSOR;
         }
-        if (highByteValue == damageOfTempSensor && lowByteValue == damageOfTempSensor) {
-            return new ParsedValue(damageOfTempSensorText);
+        if (TempError.SENSOR_ERROR.check(highByteValue, lowByteValue)) {
+            return TempError.SENSOR_ERROR;
         }
-        return new ParsedValue(response.convertBytesOfNumberToFloat(highByteNumber, lowByteNumber));
+        return response.convertBytesOfNumberToFloat(highByteNumber, lowByteNumber);
     }
 }
