@@ -14,22 +14,19 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
-import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.PreheaterStateParser.PreheaterState;
-import static pl.ekozefir.mobile.serial.centralstate.value.PreheaterStateParser.PreheaterState.OFF;
-import static pl.ekozefir.mobile.serial.centralstate.value.PreheaterStateParser.PreheaterState.ON;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.OnOff;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.OFF;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.ON;
 
 /**
  *
  * @author Michal Marasz
  */
-public class PreheaterStateParser implements MobileParser<PreheaterState> {
+public class PreheaterStateParser implements MobileParser<OnOff> {
 
-    public enum PreheaterState {
-        ON, OFF;
-    }
-    private static final InverseEnumMap<PreheaterState, Integer> values = new InverseEnumMapToValue(
+    private static final InverseEnumMap<OnOff, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
                     ON, 1, OFF, 0
             ))
@@ -39,7 +36,7 @@ public class PreheaterStateParser implements MobileParser<PreheaterState> {
     private static final int bitMask = 1;
 
     @Override
-    public PreheaterState parse(Response response) {
+    public OnOff parse(Response response) {
         return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 

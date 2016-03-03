@@ -16,21 +16,21 @@ import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
 import pl.ekozefir.mobile.serial.centralstate.Response;
-import pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.CHANGE_FILTER;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.CONNECTION_WITH_MAIN_BOARD;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.DEFROSTING;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.EKOTOUCH_CONNECTION;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.EXTRACT_FAN;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.FIRE_PROTECTION;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.MAIN_BOARD;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.NONE;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.OVERHEATING;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.ROTARY_EXCHANGER;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.SUPPLY_FAN;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.TEMPERATURE_SENSOR;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.THERMAL_PROTECTION;
-import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.AlertMessage.WATER_HEATER_ANTIFROST_PROTECTION;
+import pl.ekozefir.mobile.serial.parameter.AlertMessage;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.CHANGE_FILTER;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.CONNECTION_WITH_MAIN_BOARD;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.DEFROSTING;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.EKOTOUCH_CONNECTION;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.EXTRACT_FAN;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.FIRE_PROTECTION;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.MAIN_BOARD;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.NONE;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.OVERHEATING;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.ROTARY_EXCHANGER;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.SUPPLY_FAN;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.TEMPERATURE_SENSOR;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.THERMAL_PROTECTION;
+import static pl.ekozefir.mobile.serial.parameter.AlertMessage.WATER_HEATER_ANTIFROST_PROTECTION;
 
 /**
  *
@@ -38,13 +38,9 @@ import static pl.ekozefir.mobile.serial.centralstate.value.AlertMessageParser.Al
  */
 public class AlertMessageParser implements MobileParser<AlertMessage> {
 
-    public enum AlertMessage {
-        NONE, TEMPERATURE_SENSOR, MAIN_BOARD, SUPPLY_FAN, EXTRACT_FAN, THERMAL_PROTECTION,
-        WATER_HEATER_ANTIFROST_PROTECTION, CONNECTION_WITH_MAIN_BOARD, OVERHEATING, CHANGE_FILTER,
-        DEFROSTING, ROTARY_EXCHANGER, FIRE_PROTECTION, EKOTOUCH_CONNECTION;
-    }
     private static final InverseEnumMap<AlertMessage, Integer> values = new InverseEnumMapToValue(
-            Maps.immutableEnumMap(ImmutableMap.<AlertMessage, Integer>builder().put(NONE, 0).
+            Maps.immutableEnumMap(ImmutableMap.<AlertMessage, Integer>builder().
+                    put(NONE, 0).
                     put(TEMPERATURE_SENSOR, 1).
                     put(MAIN_BOARD, 2).
                     put(SUPPLY_FAN, 3).
@@ -59,7 +55,6 @@ public class AlertMessageParser implements MobileParser<AlertMessage> {
                     put(FIRE_PROTECTION, 14).
                     put(EKOTOUCH_CONNECTION, 53).
                     build()));
-
     private static final int byteNumber = 41;
 
     @Override

@@ -10,20 +10,22 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
+import pl.ekozefir.mobile.serial.centralstate.MobileParser;
 import pl.ekozefir.mobile.serial.centralstate.Response;
-import pl.ekozefir.mobile.serial.centralstate.TempParser;
+import pl.ekozefir.mobile.serial.parameter.Temperature;
 
 /**
  *
  * @author Michal Marasz
  */
-public class TempExtractParser extends TempParser {
+public class TempExtractParser implements MobileParser<Temperature> {
 
     private static final int highByteNumber = 8;
     private static final int lowByteNumber = 7;
 
     @Override
-    public Object parse(Response response) {
-        return parseTemp(response, highByteNumber, lowByteNumber);
+    public Temperature parse(Response response) {
+        return new Temperature(response.getByteOfNumber(highByteNumber),
+                response.getByteOfNumber(lowByteNumber));
     }
 }

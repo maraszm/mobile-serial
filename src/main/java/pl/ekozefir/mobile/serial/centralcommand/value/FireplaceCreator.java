@@ -10,31 +10,30 @@
  */
 package pl.ekozefir.mobile.serial.centralcommand.value;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import java.util.Map;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.value.FireplaceCreator.FireplaceMode;
+import pl.ekozefir.mobile.serial.parameter.OnOff;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.OFF;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.ON;
 
 /**
  *
  * @author Michal Marasz
  */
-public class FireplaceCreator implements MobileCreator<FireplaceMode> {
+public class FireplaceCreator implements MobileCreator<OnOff> {
 
-    public enum FireplaceMode {
-        OFF(0x00), ON(0x02);
-
-        private final int parameter;
-
-        private FireplaceMode(int parameter) {
-            this.parameter = parameter;
-        }
-    }
+    private static final Map<OnOff, Integer> values = Maps.immutableEnumMap(ImmutableMap.of(
+            OFF, 0, ON, 2
+    ));
     private static final int type = 0x08;
 
     @Override
-    public MobileCommand create(FireplaceMode mobileParameter, char centralId) {
-        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
+    public MobileCommand create(OnOff mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(values.get(mobileParameter)).build();
     }
 
 }

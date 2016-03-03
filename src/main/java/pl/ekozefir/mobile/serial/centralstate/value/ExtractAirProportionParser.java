@@ -10,8 +10,8 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.Response;
 
 /**
  *

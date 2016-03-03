@@ -10,9 +10,17 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
 import pl.ekozefir.mobile.serial.centralstate.Response;
-import pl.ekozefir.mobile.serial.centralstate.value.FunctionParser.Function;
+import pl.ekozefir.mobile.serial.parameter.Function;
+import static pl.ekozefir.mobile.serial.parameter.Function.AUTO;
+import static pl.ekozefir.mobile.serial.parameter.Function.COOLING;
+import static pl.ekozefir.mobile.serial.parameter.Function.HEATING;
+import static pl.ekozefir.mobile.serial.parameter.Function.RECOVERY;
 
 /**
  *
@@ -20,39 +28,18 @@ import pl.ekozefir.mobile.serial.centralstate.value.FunctionParser.Function;
  */
 public class FunctionParser implements MobileParser<Function> {
 
-    public enum Function {
-        COOLING(0x01), HEATING(0x00), RECOVERY(0x02), AUTO(0x08);
-
-        private final int parameter;
-
-        private Function(int parameter) {
-            this.parameter = parameter;
-        }
-
-        private static Function parse(int value) {
-            if (isAuto(value)) {
-                return AUTO;
-            }
-            for (Function state : values()) {
-                if (state.parameter == value) {
-                    return state;
-                }
-            }
-            throw new IllegalStateException("Could not find value");
-        }
-
-        private static boolean isAuto(int value) {
-            return value >= AUTO.parameter;
-        }
-
-    }
+    private static final InverseEnumMap<Function, Integer> values = new InverseEnumMapToValue(
+            Maps.immutableEnumMap(ImmutableMap.of(
+                    COOLING, 0x01, HEATING, 0x00, RECOVERY, 0x02, AUTO, 0x08
+            ))
+    );
     private static final int byteNumber = 38;
     private static final int bitShift = 0;
     private static final int bitMask = 0b1111;
 
     @Override
     public Function parse(Response response) {
-        return Function.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
+        return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

@@ -8,23 +8,12 @@
  * Contributors:
  *    Michal Marasz - initial API and implementation and/or initial documentation
  */
-package pl.ekozefir.mobile.serial.centralcommand;
+package pl.ekozefir.mobile.serial.parameter;
 
 /**
  *
  * @author Michal Marasz
- * @param <T>
  */
-public class MobileParameterImpl<T> implements MobileParameter<T> {
-
-    private final T value;
-
-    public MobileParameterImpl(T value) {
-        this.value = value;
-    }
-
-    @Override
-    public T getValue() {
-        return value;
-    }
+public enum TempSensorStatus {
+    OK, NO_SENSOR, SENSOR_ERROR;
 }

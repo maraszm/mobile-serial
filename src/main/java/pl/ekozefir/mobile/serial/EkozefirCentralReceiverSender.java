@@ -11,7 +11,6 @@
 package pl.ekozefir.mobile.serial;
 
 import com.google.common.collect.Lists;
-import pl.ekozefir.mobile.serial.centralstate.Response;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.apache.log4j.Logger;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
+import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.connection.RawSerialConnection;
 import pl.ekozefir.mobile.serial.connection.RawSerialConnectionWithTries;
 

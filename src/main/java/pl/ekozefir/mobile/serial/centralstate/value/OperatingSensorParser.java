@@ -10,9 +10,20 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.Response;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.OperatingSensorParser.OperatingSensor;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.OperatingSensor;
+import static pl.ekozefir.mobile.serial.parameter.OperatingSensor.ADDITIONAL_SENSOR_AUTO;
+import static pl.ekozefir.mobile.serial.parameter.OperatingSensor.ADDITIONAL_SENSOR_MANUAL;
+import static pl.ekozefir.mobile.serial.parameter.OperatingSensor.CONTROLLER_SENSOR_AUTO;
+import static pl.ekozefir.mobile.serial.parameter.OperatingSensor.CONTROLLER_SENSOR_MANUAL;
+import static pl.ekozefir.mobile.serial.parameter.OperatingSensor.EXTRACT_SENSOR_AUTO;
+import static pl.ekozefir.mobile.serial.parameter.OperatingSensor.EXTRACT_SENSOR_MANUAL;
+import static pl.ekozefir.mobile.serial.parameter.OperatingSensor.SUPPLY_SENSOR_MANUAL;
 
 /**
  *
@@ -20,37 +31,24 @@ import pl.ekozefir.mobile.serial.centralstate.value.OperatingSensorParser.Operat
  */
 public class OperatingSensorParser implements MobileParser<OperatingSensor> {
 
-    public enum OperatingSensor {
-        CONTROLLER_SENSOR_AUTO(0b1000),
-        EXTRACT_SENSOR_AUTO(0b1001),
-        ADDITIONAL_SENSOR_AUTO(0b1010),
-        CONTROLLER_SENSOR_MANUAL(0b0000),
-        SUPPLY_SENSOR_MANUAL(0b0001),
-        ADDITIONAL_SENSOR_MANUAL(0b0010),
-        EXTRACT_SENSOR_MANUAL(0b0011);
-
-        private final int parameter;
-
-        private OperatingSensor(int parameter) {
-            this.parameter = parameter;
-        }
-
-        private static OperatingSensor parse(int value) {
-            for (OperatingSensor state : values()) {
-                if (state.parameter == value) {
-                    return state;
-                }
-            }
-            throw new IllegalStateException("Could not find value");
-        }
-    }
+    private static final InverseEnumMap<OperatingSensor, Integer> values = new InverseEnumMapToValue(
+            Maps.immutableEnumMap(ImmutableMap.<OperatingSensor, Integer>builder().
+                    put(EXTRACT_SENSOR_MANUAL, 0b0011).
+                    put(ADDITIONAL_SENSOR_MANUAL, 0b0010).
+                    put(SUPPLY_SENSOR_MANUAL, 0b0001).
+                    put(CONTROLLER_SENSOR_MANUAL, 0b0000).
+                    put(ADDITIONAL_SENSOR_AUTO, 0b1010).
+                    put(EXTRACT_SENSOR_AUTO, 0b1001).
+                    put(CONTROLLER_SENSOR_AUTO, 0b1000).build()
+            )
+    );
     private static final int byteNumber = 40;
     private static final int bitShift = 0;
     private static final int bitMask = 15;
 
     @Override
     public OperatingSensor parse(Response response) {
-        return OperatingSensor.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
+        return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

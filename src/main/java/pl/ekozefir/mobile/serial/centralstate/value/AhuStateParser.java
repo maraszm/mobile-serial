@@ -10,9 +10,18 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.Response;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.AhuStateParser.AhuState;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.AhuState;
+import static pl.ekozefir.mobile.serial.parameter.AhuState.ALERT;
+import static pl.ekozefir.mobile.serial.parameter.AhuState.SHUTDOWN;
+import static pl.ekozefir.mobile.serial.parameter.AhuState.STANDBY;
+import static pl.ekozefir.mobile.serial.parameter.AhuState.STARTING;
+import static pl.ekozefir.mobile.serial.parameter.AhuState.WORK;
 
 /**
  *
@@ -20,35 +29,16 @@ import pl.ekozefir.mobile.serial.centralstate.value.AhuStateParser.AhuState;
  */
 public class AhuStateParser implements MobileParser<AhuState> {
 
-    public enum AhuState {
-        STARTING(0x01),
-        WORK(0x02),
-        SHUTDOWN(0x03),
-        STANDBY(0x04),
-        ALERT(0x05);
-
-        private final int parameter;
-
-        private AhuState(int parameter) {
-            this.parameter = parameter;
-        }
-
-        private static AhuState parse(int value) {
-            for (AhuState state : values()) {
-                if (state.parameter == value) {
-                    return state;
-                }
-            }
-            throw new IllegalStateException("Could not find value");
-        }
-
-    }
-
+    private static final InverseEnumMap<AhuState, Integer> values = new InverseEnumMapToValue(
+            Maps.immutableEnumMap(ImmutableMap.of(
+                    STARTING, 0x01, WORK, 0x02, SHUTDOWN, 0x03, STANDBY, 0x04, ALERT, 0x05
+            ))
+    );
     private static final int byteNumber = 3;
 
     @Override
     public AhuState parse(Response response) {
-        return AhuState.parse(response.convertByteOfNumberToInt(byteNumber));
+        return values.find(response.convertByteOfNumberToInt(byteNumber));
     }
 
 }

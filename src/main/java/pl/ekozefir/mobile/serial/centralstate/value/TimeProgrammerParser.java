@@ -10,40 +10,34 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import java.util.stream.Stream;
-import pl.ekozefir.mobile.serial.centralstate.Response;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.TimeProgrammerParser.TimeProgrammer;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.OnOff;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.OFF;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.ON;
 
 /**
  *
  * @author Michal Marasz
  */
-public class TimeProgrammerParser implements MobileParser<TimeProgrammer> {
+public class TimeProgrammerParser implements MobileParser<OnOff> {
 
-    public enum TimeProgrammer {
-        ON(0x01), OFF(0x00);
-
-        private final int parameter;
-
-        private TimeProgrammer(int parameter) {
-            this.parameter = parameter;
-        }
-
-        private static TimeProgrammer parse(int value) {
-            return Stream.of(values()).
-                    filter(parameter -> parameter.parameter == value).
-                    findAny().orElseThrow(() -> new IllegalStateException("Could not find value"));
-        }
-
-    }
+    private static final InverseEnumMap<OnOff, Integer> values = new InverseEnumMapToValue(
+            Maps.immutableEnumMap(ImmutableMap.of(
+                    ON, 1, OFF, 0
+            ))
+    );
     private static final int byteNumber = 37;
     private static final int bitShift = 2;
     private static final int bitMask = 1;
 
     @Override
-    public TimeProgrammer parse(Response response) {
-        return TimeProgrammer.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
+    public OnOff parse(Response response) {
+        return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

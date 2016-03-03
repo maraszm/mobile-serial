@@ -8,15 +8,12 @@
  * Contributors:
  *    Michal Marasz - initial API and implementation and/or initial documentation
  */
-package pl.ekozefir.mobile.serial.centralcommand;
+package pl.ekozefir.mobile.serial.parameter;
 
 /**
  *
  * @author Michal Marasz
- * @param <T>
  */
-public interface MobileParameter<T> {
-
-    T getValue();
-
+public enum BypassMode {
+    AUTO, OFF, ON;
 }

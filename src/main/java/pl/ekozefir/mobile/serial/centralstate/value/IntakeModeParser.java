@@ -14,22 +14,19 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
-import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.IntakeModeParser.IntakeMode;
-import static pl.ekozefir.mobile.serial.centralstate.value.IntakeModeParser.IntakeMode.AUTO;
-import static pl.ekozefir.mobile.serial.centralstate.value.IntakeModeParser.IntakeMode.MANUAL;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.AutoManual;
+import static pl.ekozefir.mobile.serial.parameter.AutoManual.AUTO;
+import static pl.ekozefir.mobile.serial.parameter.AutoManual.MANUAL;
 
 /**
  *
  * @author Michal Marasz
  */
-public class IntakeModeParser implements MobileParser<IntakeMode> {
+public class IntakeModeParser implements MobileParser<AutoManual> {
 
-    public enum IntakeMode {
-        MANUAL, AUTO;
-    }
-    private static final InverseEnumMap<IntakeMode, Integer> values = new InverseEnumMapToValue(
+    private static final InverseEnumMap<AutoManual, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
                     AUTO, 1, MANUAL, 0
             ))
@@ -39,7 +36,7 @@ public class IntakeModeParser implements MobileParser<IntakeMode> {
     private static final int bitMask = 1;
 
     @Override
-    public IntakeMode parse(Response response) {
+    public AutoManual parse(Response response) {
         return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 

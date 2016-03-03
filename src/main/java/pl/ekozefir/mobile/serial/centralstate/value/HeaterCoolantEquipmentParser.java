@@ -10,41 +10,34 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import java.util.stream.Stream;
-import pl.ekozefir.mobile.serial.centralstate.ParsedValue;
-import pl.ekozefir.mobile.serial.centralstate.Response;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.HeaterCoolantEquipmentParser.HeaterCoolantEquipment;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.TrueNone;
+import static pl.ekozefir.mobile.serial.parameter.TrueNone.NONE;
+import static pl.ekozefir.mobile.serial.parameter.TrueNone.TRUE;
 
 /**
  *
  * @author Michal Marasz
  */
-public class HeaterCoolantEquipmentParser implements MobileParser<HeaterCoolantEquipment> {
+public class HeaterCoolantEquipmentParser implements MobileParser<TrueNone> {
 
-    public enum HeaterCoolantEquipment {
-        TRUE(0x01), NONE(0x00);
-
-        private final int parameter;
-
-        private HeaterCoolantEquipment(int parameter) {
-            this.parameter = parameter;
-        }
-
-        private static HeaterCoolantEquipment parse(int value) {
-            return Stream.of(values()).
-                    filter(parameter -> parameter.parameter == value).
-                    findAny().orElseThrow(() -> new IllegalStateException("Could not find value"));
-        }
-
-    }
+    private static final InverseEnumMap<TrueNone, Integer> values = new InverseEnumMapToValue(
+            Maps.immutableEnumMap(ImmutableMap.of(
+                    TRUE, 1, NONE, 0
+            ))
+    );
     private static final int byteNumber = 46;
     private static final int bitShift = 3;
     private static final int bitMask = 1;
 
     @Override
-    public HeaterCoolantEquipment parse(Response response) {
-        return HeaterCoolantEquipment.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
+    public TrueNone parse(Response response) {
+        return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

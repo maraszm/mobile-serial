@@ -10,15 +10,13 @@
  */
 package pl.ekozefir.mobile.serial.centralstate;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.Objects;
 import org.apache.log4j.Logger;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
 public class Response {
 
@@ -27,9 +25,8 @@ public class Response {
     private static final byte firstCrcValue = (byte) 0xAA;
     private static final int firstWrongAhuType = 0xFF;
     private static final int secondWrongAhuType = 0x00;
-    private static final float tempFactor = 10f;
     private static final int ahuTypeNumber = 1;
-    private static final int crcByteNumber = 50; 
+    private static final int crcByteNumber = 50;
     private final byte[] bytes;
 
     public Response(byte[] bytes) {
@@ -40,13 +37,9 @@ public class Response {
         this.bytes = Arrays.copyOf(bytes, expectedBytesNumber);
     }
 
-    public float convertBytesOfNumberToFloat(int highNumberByte, int lowNumberByte) {
-        checkIndex(highNumberByte);
-        checkIndex(lowNumberByte);
-        byte[] bytesValuesToConvert = new byte[2];
-        bytesValuesToConvert[0] = bytes[highNumberByte];
-        bytesValuesToConvert[1] = bytes[lowNumberByte];
-        return ByteBuffer.wrap(bytesValuesToConvert).order(ByteOrder.LITTLE_ENDIAN).getShort() / tempFactor;
+    public byte getByteOfNumber(int number) {
+        checkIndex(number);
+        return bytes[number];
     }
 
     public int convertByteOfNumberToInt(int number) {
@@ -81,7 +74,7 @@ public class Response {
             crc ^= bytes[index];
         }
         int crcValue = bytes[crcByteNumber];
-        if(crcValue != crc){
+        if (crcValue != crc) {
             log.debug("Wrong CRC");
             throw new IllegalStateException("Wrong CRC");
         }
@@ -89,8 +82,8 @@ public class Response {
 
     private void checkAhuType(byte[] bytes) {
         int ahuValue = (bytes[1] & 0xFF);
-        if(ahuValue == firstWrongAhuType ||
-                ahuValue == secondWrongAhuType){
+        if (ahuValue == firstWrongAhuType
+                || ahuValue == secondWrongAhuType) {
             log.debug("Unknown ahu type");
             throw new IllegalStateException("Unknown ahu type");
         }

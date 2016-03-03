@@ -14,22 +14,19 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
-import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.RecirculationStateParser.RecirculationState;
-import static pl.ekozefir.mobile.serial.centralstate.value.RecirculationStateParser.RecirculationState.OFF;
-import static pl.ekozefir.mobile.serial.centralstate.value.RecirculationStateParser.RecirculationState.ON;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.OnOff;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.OFF;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.ON;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class RecirculationStateParser implements MobileParser<RecirculationState> {
+public class RecirculationStateParser implements MobileParser<OnOff> {
 
-    public enum RecirculationState{
-        ON, OFF;
-    }
-        private static final InverseEnumMap<RecirculationState, Integer> values = new InverseEnumMapToValue(
+    private static final InverseEnumMap<OnOff, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
                     ON, 1, OFF, 0
             ))
@@ -39,7 +36,7 @@ public class RecirculationStateParser implements MobileParser<RecirculationState
     private static final int bitMask = 1;
 
     @Override
-    public RecirculationState parse(Response response) {
+    public OnOff parse(Response response) {
         return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 

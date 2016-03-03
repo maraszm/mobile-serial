@@ -16,20 +16,17 @@ import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
 import pl.ekozefir.mobile.serial.centralstate.Response;
-import pl.ekozefir.mobile.serial.centralstate.value.GroundIntakeStateParser.GroundIntakeState;
-import static pl.ekozefir.mobile.serial.centralstate.value.GroundIntakeStateParser.GroundIntakeState.OFF;
-import static pl.ekozefir.mobile.serial.centralstate.value.GroundIntakeStateParser.GroundIntakeState.ON;
+import pl.ekozefir.mobile.serial.parameter.OnOff;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.OFF;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.ON;
 
 /**
  *
  * @author Michal Marasz
  */
-public class GroundIntakeStateParser implements MobileParser<GroundIntakeState> {
+public class GroundIntakeStateParser implements MobileParser<OnOff> {
 
-    public enum GroundIntakeState {
-        ON, OFF;
-    }
-    private static final InverseEnumMap<GroundIntakeState, Integer> values = new InverseEnumMapToValue(
+    private static final InverseEnumMap<OnOff, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
                     ON, 0, OFF, 1
             ))
@@ -39,7 +36,7 @@ public class GroundIntakeStateParser implements MobileParser<GroundIntakeState> 
     private static final int bitMask = 1;
 
     @Override
-    public GroundIntakeState parse(Response response) {
+    public OnOff parse(Response response) {
         return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 

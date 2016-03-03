@@ -10,31 +10,30 @@
  */
 package pl.ekozefir.mobile.serial.centralcommand.value;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import java.util.Map;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.value.BypassModeCreator.BypassMode;
+import pl.ekozefir.mobile.serial.parameter.BypassMode;
+import static pl.ekozefir.mobile.serial.parameter.BypassMode.AUTO;
+import static pl.ekozefir.mobile.serial.parameter.BypassMode.OFF;
+import static pl.ekozefir.mobile.serial.parameter.BypassMode.ON;
 
 /**
  *
  * @author Michal Marasz
  */
 public class BypassModeCreator implements MobileCreator<BypassMode> {
-
-    public enum BypassMode {
-        AUTO(0x02), OFF(0x00), ON(0x01);
-        
-        private final int parameter;
-        
-        private BypassMode(int parameter){
-            this.parameter = parameter;
-        }
-        
-    }
+    
+    private static final Map<BypassMode, Integer> values = Maps.immutableEnumMap(ImmutableMap.of(
+            OFF, 0, ON, 1, AUTO, 2
+    ));
     private static final int type = 0x0A;
-
+    
     @Override
     public MobileCommand create(BypassMode mobileParameter, char centralId) {
-        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(values.get(mobileParameter)).build();
     }
 }

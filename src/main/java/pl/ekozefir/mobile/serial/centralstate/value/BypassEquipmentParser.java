@@ -14,22 +14,19 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
-import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.BypassEquipmentParser.BypassEquipment;
-import static pl.ekozefir.mobile.serial.centralstate.value.BypassEquipmentParser.BypassEquipment.NONE;
-import static pl.ekozefir.mobile.serial.centralstate.value.BypassEquipmentParser.BypassEquipment.TRUE;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.TrueNone;
+import static pl.ekozefir.mobile.serial.parameter.TrueNone.NONE;
+import static pl.ekozefir.mobile.serial.parameter.TrueNone.TRUE;
 
 /**
  *
  * @author Michal Marasz
  */
-public class BypassEquipmentParser implements MobileParser<BypassEquipment> {
+public class BypassEquipmentParser implements MobileParser<TrueNone> {
 
-    public enum BypassEquipment {
-        NONE, TRUE;
-    }
-    private static final InverseEnumMap<BypassEquipment, Integer> values = new InverseEnumMapToValue(
+    private static final InverseEnumMap<TrueNone, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
                     TRUE, 1, NONE, 0
             ))
@@ -39,7 +36,7 @@ public class BypassEquipmentParser implements MobileParser<BypassEquipment> {
     private static final int bitMask = 1;
 
     @Override
-    public BypassEquipment parse(Response response) {
+    public TrueNone parse(Response response) {
         return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 

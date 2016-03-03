@@ -12,8 +12,8 @@ package pl.ekozefir.mobile.serial.centralstate.value;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
+import pl.ekozefir.mobile.serial.centralstate.Response;
 
 /**
  *

@@ -10,10 +10,17 @@
  */
 package pl.ekozefir.mobile.serial.centralcommand.value;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import java.util.Map;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.value.FunctionCreator.Function;
+import pl.ekozefir.mobile.serial.parameter.Function;
+import static pl.ekozefir.mobile.serial.parameter.Function.AUTO;
+import static pl.ekozefir.mobile.serial.parameter.Function.COOLING;
+import static pl.ekozefir.mobile.serial.parameter.Function.HEATING;
+import static pl.ekozefir.mobile.serial.parameter.Function.RECOVERY;
 
 /**
  *
@@ -21,22 +28,14 @@ import pl.ekozefir.mobile.serial.centralcommand.value.FunctionCreator.Function;
  */
 public class FunctionCreator implements MobileCreator<Function> {
 
-    public enum Function {
-        AUTO(0x03), COOLING(0x01), RECOVERY(0x02), HEATING(0x00);
-
-        private final int parameter;
-
-        private Function(int parameter) {
-            this.parameter = parameter;
-        }
-
-    }
-
+    private static final Map<Function, Integer> values = Maps.immutableEnumMap(ImmutableMap.of(
+            AUTO, 0x03, COOLING, 0x01, RECOVERY, 0x02, HEATING, 0x00
+    ));
     private static final int type = 0x0C;
 
     @Override
     public MobileCommand create(Function mobileParameter, char centralId) {
-        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(values.get(mobileParameter)).build();
     }
 
 }

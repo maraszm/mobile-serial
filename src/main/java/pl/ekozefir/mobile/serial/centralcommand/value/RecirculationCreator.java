@@ -10,32 +10,30 @@
  */
 package pl.ekozefir.mobile.serial.centralcommand.value;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import java.util.Map;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.value.RecirculationCreator.Recirculation;
+import pl.ekozefir.mobile.serial.parameter.OnOff;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.OFF;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.ON;
 
 /**
  *
  * @author Michal Marasz
  */
-public class RecirculationCreator implements MobileCreator<Recirculation> {
-
-        public enum Recirculation {
-        ON(0x01), OFF(0x00);
-
-        private final int parameter;
-
-        private Recirculation(int parameter) {
-            this.parameter = parameter;
-        }
-
-    }
+public class RecirculationCreator implements MobileCreator<OnOff> {
+    
+    private static final Map<OnOff, Integer> values = Maps.immutableEnumMap(ImmutableMap.of(
+            OFF, 0x00, ON, 0x01
+    ));
     private static final int type = 0x0D;
-
+    
     @Override
-    public MobileCommand create(Recirculation mobileParameter, char centralId) {
-        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
+    public MobileCommand create(OnOff mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(values.get(mobileParameter)).build();
     }
-
+    
 }

@@ -8,17 +8,12 @@
  * Contributors:
  *    Michal Marasz - initial API and implementation and/or initial documentation
  */
-package pl.ekozefir.mobile.serial.centralcommand;
+package pl.ekozefir.mobile.serial.parameter;
 
 /**
  *
  * @author Michal Marasz
  */
-public class EmptyParameter implements MobileParameter {
-
-    @Override
-    public Object getValue() {
-        throw new IllegalStateException("Empty parameter");
-    }
-    
+public enum HeaterEquipment {
+    ELECTRIC, WATER_3POINT, WATER_THERMAL, EVAPORATOR, ELECTRIC_2UNIT, EXCHANGER_3POINT, NONE;
 }

@@ -16,9 +16,9 @@ import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
 import pl.ekozefir.mobile.serial.centralstate.Response;
-import pl.ekozefir.mobile.serial.centralstate.value.DefrostingParser.Defrost;
-import static pl.ekozefir.mobile.serial.centralstate.value.DefrostingParser.Defrost.DEFROST;
-import static pl.ekozefir.mobile.serial.centralstate.value.DefrostingParser.Defrost.NONE;
+import pl.ekozefir.mobile.serial.parameter.Defrost;
+import static pl.ekozefir.mobile.serial.parameter.Defrost.DEFROST;
+import static pl.ekozefir.mobile.serial.parameter.Defrost.NONE;
 
 /**
  *
@@ -26,10 +26,6 @@ import static pl.ekozefir.mobile.serial.centralstate.value.DefrostingParser.Defr
  */
 public class DefrostingParser implements MobileParser<Defrost> {
 
-    public enum Defrost {
-
-        DEFROST, NONE;
-    }
     private static final InverseEnumMap<Defrost, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
                     DEFROST, 1, NONE, 0

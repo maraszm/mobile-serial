@@ -15,12 +15,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToCollection;
-import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.CoolerEquipmentParser.CoolerEquipment;
-import static pl.ekozefir.mobile.serial.centralstate.value.CoolerEquipmentParser.CoolerEquipment.EVAPORATOR;
-import static pl.ekozefir.mobile.serial.centralstate.value.CoolerEquipmentParser.CoolerEquipment.NONE;
-import static pl.ekozefir.mobile.serial.centralstate.value.CoolerEquipmentParser.CoolerEquipment.WATER_3POINT;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.CoolerEquipment;
+import static pl.ekozefir.mobile.serial.parameter.CoolerEquipment.EVAPORATOR;
+import static pl.ekozefir.mobile.serial.parameter.CoolerEquipment.NONE;
+import static pl.ekozefir.mobile.serial.parameter.CoolerEquipment.WATER_3POINT;
 
 /**
  *
@@ -28,14 +28,11 @@ import static pl.ekozefir.mobile.serial.centralstate.value.CoolerEquipmentParser
  */
 public class CoolerEquipmentParser implements MobileParser<CoolerEquipment> {
 
-    public enum CoolerEquipment {
-        EVAPORATOR, WATER_3POINT, NONE;
-    }
     private static final InverseEnumMap<CoolerEquipment, Integer> values = new InverseEnumMapToCollection(
             Maps.immutableEnumMap(ImmutableMap.of(
-            EVAPORATOR, ImmutableSet.of(5, 6, 7, 12),
-            WATER_3POINT, ImmutableSet.of(8, 9, 10, 11, 13)
-    )), NONE);
+                    EVAPORATOR, ImmutableSet.of(5, 6, 7, 12),
+                    WATER_3POINT, ImmutableSet.of(8, 9, 10, 11, 13)
+            )), NONE);
     private static final int byteNumber = 47;
 
     @Override

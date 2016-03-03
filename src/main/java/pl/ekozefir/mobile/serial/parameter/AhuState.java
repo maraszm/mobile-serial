@@ -8,25 +8,12 @@
  * Contributors:
  *    Michal Marasz - initial API and implementation and/or initial documentation
  */
-package pl.ekozefir.mobile.serial.centralstate;
+package pl.ekozefir.mobile.serial.parameter;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
-public class ParsedValue<T> {
-
-    private final T value;
-
-    public ParsedValue(T value) {
-        this.value = value;
-    }
-
-    public String toText() {
-        return value.toString();
-    }
-    
-    public T get(){
-        return value;
-    }
+public enum AhuState {
+    STARTING, WORK, SHUTDOWN, STANDBY, ALERT;
 }

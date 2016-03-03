@@ -10,42 +10,34 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.Response;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.FireplaceParser.Fireplace;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.OnOff;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.OFF;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.ON;
 
 /**
  *
  * @author Michal Marasz
  */
-public class FireplaceParser implements MobileParser<Fireplace> {
+public class FireplaceParser implements MobileParser<OnOff> {
 
-    public enum Fireplace {
-        ON(0x01), OFF(0x00);
-
-        private final int parameter;
-
-        private Fireplace(int parameter) {
-            this.parameter = parameter;
-        }
-
-        private static Fireplace parse(int value) {
-            for (Fireplace state : values()) {
-                if (state.parameter == value) {
-                    return state;
-                }
-            }
-            throw new IllegalStateException("Could not find value");
-        }
-
-    }
     private static final int byteNumber = 37;
     private static final int bitShift = 4;
     private static final int bitMask = 1;
+    private static final InverseEnumMap<OnOff, Integer> values = new InverseEnumMapToValue(
+            Maps.immutableEnumMap(ImmutableMap.of(
+                    ON, 1, OFF, 0
+            ))
+    );
 
     @Override
-    public Fireplace parse(Response response) {
-        return Fireplace.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
+    public OnOff parse(Response response) {
+        return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

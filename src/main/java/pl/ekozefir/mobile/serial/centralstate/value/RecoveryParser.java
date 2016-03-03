@@ -12,7 +12,9 @@ package pl.ekozefir.mobile.serial.centralstate.value;
 
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
 import pl.ekozefir.mobile.serial.centralstate.Response;
-import pl.ekozefir.mobile.serial.centralstate.TempParser;
+import pl.ekozefir.mobile.serial.parameter.OnOff;
+import pl.ekozefir.mobile.serial.parameter.Temperature;
+import pl.ekozefir.mobile.serial.parameter.TrueNone;
 
 /**
  *
@@ -41,15 +43,15 @@ public class RecoveryParser implements MobileParser {
     }
 
     private Object getRecovery(Response response) {
-        if (bypassState.parse(response) == BypassStateParser.BypassState.ON
-                && bypassEquipment.parse(response) == BypassEquipmentParser.BypassEquipment.TRUE) {
+        if (bypassState.parse(response) == OnOff.ON
+                && bypassEquipment.parse(response) == TrueNone.TRUE) {
             return "NONE";
         }
         float tc;
-        if (preheaterEquipment.parse(response) == PreheaterEquipmentParser.PreheaterEquipment.TRUE) {
+        if (preheaterEquipment.parse(response) == TrueNone.TRUE) {
             tc = getTemp(tempPreheater, response);
-        } else if (intakeEquipment.parse(response) == GroundIntakeEquipmentParser.GroundInakeEquipment.TRUE
-                && intakeState.parse(response) == GroundIntakeStateParser.GroundIntakeState.ON) {
+        } else if (intakeEquipment.parse(response) == TrueNone.TRUE
+                && intakeState.parse(response) == OnOff.ON) {
             tc = getTemp(tempIntakeGround, response);
         } else {
             tc = getTemp(tempIntakeWall, response);
@@ -66,11 +68,8 @@ public class RecoveryParser implements MobileParser {
         return "NONE";
     }
 
-    private float getTemp(MobileParser parser, Response response) {
-        Object valueFromTemp = parser.parse(response);
-        if (!(valueFromTemp instanceof TempParser.TempError)) {
-            return (float) valueFromTemp;
-        }
-        throw new IllegalStateException("Error with temp sensor " + valueFromTemp);
+    private float getTemp(MobileParser<Temperature> parser, Response response) {
+        Temperature valueFromTemp = parser.parse(response);
+        return valueFromTemp.getValue().orElseThrow(() -> new IllegalStateException("Error with temp sensor " + valueFromTemp));
     }
 }

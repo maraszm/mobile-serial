@@ -10,9 +10,17 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.Response;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.ControlTypeParser.ControlType;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.ControlType;
+import static pl.ekozefir.mobile.serial.parameter.ControlType.DIGITAL_E;
+import static pl.ekozefir.mobile.serial.parameter.ControlType.DIGITAL_G;
+import static pl.ekozefir.mobile.serial.parameter.ControlType.DIGITAL_O;
+import static pl.ekozefir.mobile.serial.parameter.ControlType.STANDARD;
 
 /**
  *
@@ -20,34 +28,19 @@ import pl.ekozefir.mobile.serial.centralstate.value.ControlTypeParser.ControlTyp
  */
 public class ControlTypeParser implements MobileParser<ControlType> {
 
-    public enum ControlType {
-        DIGITAL_E(69),
-        DIGITAL_G(72),
-        DIGITAL_O(79),
-        STANDARD(89);
-
-        private final int parameter;
-
-        private ControlType(int parameter) {
-            this.parameter = parameter;
-        }
-
-        private static ControlType parse(int value) {
-            for (ControlType state : values()) {
-                if (state.parameter == value) {
-                    return state;
-                }
-            }
-            throw new IllegalStateException("Could not find value");
-        }
-
-    }
-
+    private static final InverseEnumMap<ControlType, Integer> values = new InverseEnumMapToValue(
+            Maps.immutableEnumMap(ImmutableMap.of(
+                    DIGITAL_E, 69,
+                    DIGITAL_G, 72,
+                    DIGITAL_O, 79,
+                    STANDARD, 89
+            ))
+    );
     private static final int byteNumber = 1;
 
     @Override
     public ControlType parse(Response response) {
-        return ControlType.parse(response.convertByteOfNumberToInt(byteNumber));
+        return values.find(response.convertByteOfNumberToInt(byteNumber));
     }
 
 }

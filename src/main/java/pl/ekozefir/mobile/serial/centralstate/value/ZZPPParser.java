@@ -10,42 +10,36 @@
  */
 package pl.ekozefir.mobile.serial.centralstate.value;
 
-import pl.ekozefir.mobile.serial.centralstate.Response;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
+import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.ZZPPParser.ZZPP;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.ZZPP;
+import static pl.ekozefir.mobile.serial.parameter.ZZPP.NONE;
+import static pl.ekozefir.mobile.serial.parameter.ZZPP.ZZPP1;
+import static pl.ekozefir.mobile.serial.parameter.ZZPP.ZZPP2;
+import static pl.ekozefir.mobile.serial.parameter.ZZPP.ZZPP3;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
 public class ZZPPParser implements MobileParser<ZZPP> {
 
-    public enum ZZPP {
-        ZZPP1(0b001), ZZPP2(0b010), ZZPP3(0b100), NONE(0b00);
-
-        private final int parameter;
-
-        private ZZPP(int parameter) {
-            this.parameter = parameter;
-        }
-
-        private static ZZPP parse(int value) {
-            for (ZZPP state : values()) {
-                if (state.parameter == value) {
-                    return state;
-                }
-            }
-            throw new IllegalStateException("Could not find value");
-        }
-
-    }
+    private static final InverseEnumMap<ZZPP, Integer> values = new InverseEnumMapToValue(
+            Maps.immutableEnumMap(ImmutableMap.of(
+                    ZZPP3, 4, ZZPP2, 2, ZZPP1, 1, NONE, 0
+            ))
+    );
     private static final int byteNumber = 37;
     private static final int bitShift = 5;
     private static final int bitMask = 0b111;
 
     @Override
     public ZZPP parse(Response response) {
-        return ZZPP.parse(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
+        return values.find(response.convertByteOfNumberToInt(byteNumber, bitShift, bitMask));
     }
 
 }

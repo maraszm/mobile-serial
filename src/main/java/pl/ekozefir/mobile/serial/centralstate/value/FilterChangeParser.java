@@ -14,11 +14,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
-import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.FilterChangeParser.FilterChange;
-import static pl.ekozefir.mobile.serial.centralstate.value.FilterChangeParser.FilterChange.CHANGE;
-import static pl.ekozefir.mobile.serial.centralstate.value.FilterChangeParser.FilterChange.GOOD;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.FilterChange;
+import static pl.ekozefir.mobile.serial.parameter.FilterChange.CHANGE;
+import static pl.ekozefir.mobile.serial.parameter.FilterChange.GOOD;
 
 /**
  *
@@ -26,9 +26,6 @@ import static pl.ekozefir.mobile.serial.centralstate.value.FilterChangeParser.Fi
  */
 public class FilterChangeParser implements MobileParser<FilterChange> {
 
-    public enum FilterChange {
-        GOOD, CHANGE;
-    }
     private static final InverseEnumMap<FilterChange, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
                     CHANGE, 1, GOOD, 0

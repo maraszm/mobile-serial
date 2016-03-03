@@ -16,16 +16,16 @@ import com.google.common.collect.Maps;
 import java.util.Collection;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
 import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToCollection;
-import pl.ekozefir.mobile.serial.centralstate.Response;
 import pl.ekozefir.mobile.serial.centralstate.MobileParser;
-import pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment;
-import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.ELECTRIC;
-import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.ELECTRIC_2UNIT;
-import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.EVAPORATOR;
-import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.EXCHANGER_3POINT;
-import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.NONE;
-import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.WATER_3POINT;
-import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser.HeaterEquipment.WATER_THERMAL;
+import pl.ekozefir.mobile.serial.centralstate.Response;
+import pl.ekozefir.mobile.serial.parameter.HeaterEquipment;
+import static pl.ekozefir.mobile.serial.parameter.HeaterEquipment.ELECTRIC;
+import static pl.ekozefir.mobile.serial.parameter.HeaterEquipment.ELECTRIC_2UNIT;
+import static pl.ekozefir.mobile.serial.parameter.HeaterEquipment.EVAPORATOR;
+import static pl.ekozefir.mobile.serial.parameter.HeaterEquipment.EXCHANGER_3POINT;
+import static pl.ekozefir.mobile.serial.parameter.HeaterEquipment.NONE;
+import static pl.ekozefir.mobile.serial.parameter.HeaterEquipment.WATER_3POINT;
+import static pl.ekozefir.mobile.serial.parameter.HeaterEquipment.WATER_THERMAL;
 
 /**
  *
@@ -33,9 +33,6 @@ import static pl.ekozefir.mobile.serial.centralstate.value.HeaterEquipmentParser
  */
 public class HeaterEquipmentParser implements MobileParser<HeaterEquipment> {
 
-    public enum HeaterEquipment {
-        ELECTRIC, WATER_3POINT, WATER_THERMAL, EVAPORATOR, ELECTRIC_2UNIT, EXCHANGER_3POINT, NONE;
-    }
     private static final InverseEnumMap<HeaterEquipment, Integer> values = new InverseEnumMapToCollection(
             Maps.immutableEnumMap(ImmutableMap.<HeaterEquipment, Collection>builder().
                     put(ELECTRIC, ImmutableSet.of(2, 6, 9, 13)).

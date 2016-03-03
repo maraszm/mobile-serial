@@ -10,32 +10,30 @@
  */
 package pl.ekozefir.mobile.serial.centralcommand.value;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import java.util.Map;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.value.AhuStateCreator.AhuState;
+import pl.ekozefir.mobile.serial.parameter.OnOff;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.OFF;
+import static pl.ekozefir.mobile.serial.parameter.OnOff.ON;
 
 /**
  *
  * @author Michal Marasz
  */
-public class AhuStateCreator implements MobileCreator<AhuState> {
+public class AhuStateCreator implements MobileCreator<OnOff> {
 
-    public enum AhuState {
-        ON(0x00), OFF(0x01);
-
-        private final int parameter;
-
-        private AhuState(int parameter) {
-            this.parameter = parameter;
-        }
-
-    }
+    private static final Map<OnOff, Integer> values = Maps.immutableEnumMap(ImmutableMap.of(
+            ON, 0, OFF, 1
+    ));
     private static final int type = 0x01;
 
     @Override
-    public MobileCommand create(AhuState mobileParameter, char centralId) {
-        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
+    public MobileCommand create(OnOff mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(values.get(mobileParameter)).build();
     }
 
 }

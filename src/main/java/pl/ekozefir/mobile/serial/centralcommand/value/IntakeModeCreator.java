@@ -10,10 +10,16 @@
  */
 package pl.ekozefir.mobile.serial.centralcommand.value;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import java.util.Map;
 import pl.ekozefir.mobile.serial.centralcommand.MessageBuilder;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCommand;
 import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
-import pl.ekozefir.mobile.serial.centralcommand.value.IntakeModeCreator.IntakeMode;
+import pl.ekozefir.mobile.serial.parameter.IntakeMode;
+import static pl.ekozefir.mobile.serial.parameter.IntakeMode.AUTO;
+import static pl.ekozefir.mobile.serial.parameter.IntakeMode.GROUND;
+import static pl.ekozefir.mobile.serial.parameter.IntakeMode.WALL;
 
 /**
  *
@@ -21,22 +27,14 @@ import pl.ekozefir.mobile.serial.centralcommand.value.IntakeModeCreator.IntakeMo
  */
 public class IntakeModeCreator implements MobileCreator<IntakeMode> {
 
-    public enum IntakeMode {
-        AUTO(0x00), GROUND(0x02), WALL(0x01);
-
-        private final int parameter;
-
-        private IntakeMode(int parameter) {
-            this.parameter = parameter;
-        }
-
-    }
-
+    private static final Map<IntakeMode, Integer> values = Maps.immutableEnumMap(ImmutableMap.of(
+            AUTO, 0x00, GROUND, 0x02, WALL, 0x01
+    ));
     private static final int type = 0x0B;
 
     @Override
     public MobileCommand create(IntakeMode mobileParameter, char centralId) {
-        return MessageBuilder.setType(type, centralId).appendFirstParameter(mobileParameter.parameter).build();
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(values.get(mobileParameter)).build();
     }
 
 }
