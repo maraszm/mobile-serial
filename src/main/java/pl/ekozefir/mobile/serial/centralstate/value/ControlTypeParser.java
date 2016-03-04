@@ -31,9 +31,9 @@ public class ControlTypeParser implements MobileParser<ControlType> {
     private static final InverseEnumMap<ControlType, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
                     DIGITAL_E, 69,
-                    DIGITAL_G, 72,
+                    DIGITAL_G, 71,
                     DIGITAL_O, 79,
-                    STANDARD, 89
+                    STANDARD, 83
             ))
     );
     private static final int byteNumber = 1;

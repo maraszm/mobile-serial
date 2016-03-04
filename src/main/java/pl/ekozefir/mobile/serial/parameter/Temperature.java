@@ -10,13 +10,9 @@
  */
 package pl.ekozefir.mobile.serial.parameter;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Optional;
-import pl.ekozefir.mobile.serial.centralstate.InverseEnumMap;
-import pl.ekozefir.mobile.serial.centralstate.InverseEnumMapToValue;
 import static pl.ekozefir.mobile.serial.parameter.TempSensorStatus.NO_SENSOR;
 import static pl.ekozefir.mobile.serial.parameter.TempSensorStatus.OK;
 import static pl.ekozefir.mobile.serial.parameter.TempSensorStatus.SENSOR_ERROR;
@@ -28,22 +24,20 @@ import static pl.ekozefir.mobile.serial.parameter.TempSensorStatus.SENSOR_ERROR;
 public class Temperature {
 
     private static final float tempFactor = 10f;
-    private static final InverseEnumMap<TempSensorStatus, Byte> values = new InverseEnumMapToValue(Maps.immutableEnumMap(ImmutableMap.of(
-            NO_SENSOR, 0xF1, SENSOR_ERROR, 0xF0
-    )));
+    private static final byte noSensor = (byte) 0xF1;
+    private static final byte sensorError = (byte) 0xF0;
     private final TempSensorStatus status;
-
     private final Optional<Float> value;
 
     public Temperature(byte highByte, byte lowByte) {
-        if (highByte == lowByte) {
-            this.status = values.find(lowByte);
-            this.value = Optional.empty();
-        } else {
-            this.status = OK;
-            this.value = Optional.of(convertBytesOfNumberToFloat(highByte, lowByte));
+        status = createErrorStatus(highByte, lowByte);
+        switch (status) {
+            case OK:
+                value = Optional.of(convertBytesOfNumberToFloat(highByte, lowByte));
+                break;
+            default:
+                value = Optional.empty();
         }
-
     }
 
     public TempSensorStatus getStatus() {
@@ -54,10 +48,32 @@ public class Temperature {
         return value;
     }
 
+    /**
+     * Return error name on error or value.
+     *
+     * @return error name / value
+     */
+    public String parseSimple() {
+        if (!OK.equals(getStatus())) {
+            return getStatus().toString();
+        }
+        return value.get().toString();
+    }
+
     private float convertBytesOfNumberToFloat(byte highByte, byte lowByte) {
         byte[] bytesValuesToConvert = new byte[2];
         bytesValuesToConvert[0] = highByte;
         bytesValuesToConvert[1] = lowByte;
         return ByteBuffer.wrap(bytesValuesToConvert).order(ByteOrder.LITTLE_ENDIAN).getShort() / tempFactor;
+    }
+
+    private TempSensorStatus createErrorStatus(byte highByte, byte lowByte) {
+        if (highByte == lowByte && highByte == sensorError) {
+            return SENSOR_ERROR;
+        }
+        if (highByte == lowByte && highByte == noSensor) {
+            return NO_SENSOR;
+        }
+        return OK;
     }
 }
