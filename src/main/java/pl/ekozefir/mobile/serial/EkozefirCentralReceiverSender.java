@@ -33,7 +33,7 @@ import pl.ekozefir.mobile.serial.connection.RawSerialConnectionWithTries;
 public final class EkozefirCentralReceiverSender {
 
     private static final Logger log = Logger.getLogger(EkozefirCentralReceiverSender.class);
-    private static final int timeout = 10;
+    private static final int timeout = 20;
     private final EkozefirMessageReceiverSender receiverSender;
     private ExecutorService service;
 

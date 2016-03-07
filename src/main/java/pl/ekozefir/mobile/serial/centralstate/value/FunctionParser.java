@@ -30,8 +30,8 @@ public class FunctionParser implements MobileParser<Function> {
 
     private static final InverseEnumMap<Function, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
-                    COOLING, 0x01, HEATING, 0x00, RECOVERY, 0x02, AUTO, 0x08
-            ))
+                    COOLING, 0x01, HEATING, 0x00, RECOVERY, 0x02
+            )), AUTO
     );
     private static final int byteNumber = 38;
     private static final int bitShift = 0;

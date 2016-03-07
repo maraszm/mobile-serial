@@ -30,7 +30,9 @@ public final class EkozefirMessageReceiverSender {
     private static final Logger log = Logger.getLogger(EkozefirMessageReceiverSender.class);
     private static final List<Character> ekotouchCentralNames = Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H');
     private static final char digitalStandardCentralName = 'X';
+    //TODO: FIX
     private static final byte firstByteOfParameterRequest = (byte) 0xAA;
+    //TODO: FIX
     private static final byte secondByteOfParameterRequest = (byte) 0x55;
     private final EkozefirSerialConnection serial;
 
@@ -40,12 +42,13 @@ public final class EkozefirMessageReceiverSender {
 
     public Optional<Response> sendAndReceiveMessage(final MobileCommand command) {
         log.debug("Try to send and receive message");
-        log.debug("Send message for change central");
-        serial.sendMessage(new ChangeCentralCreator().create(null, command.getCentralId()));
+        if (!isParameterRequest(command)) {
+            log.debug("Send message for change central");
+            serial.sendMessage(new ChangeCentralCreator().create(null, command.getCentralId()));
+        }
         log.debug("Sending message");
         serial.sendMessage(command);
-        byte[] commandBytes = command.getCommand();
-        if (commandBytes[0] == firstByteOfParameterRequest && commandBytes[1] == secondByteOfParameterRequest) {
+        if (isParameterRequest(command)) {
             log.debug("Waiting for parameters");
             Optional<byte[]> maybeBytes = serial.receiveBytes();
             if (maybeBytes.isPresent()) {
@@ -84,5 +87,11 @@ public final class EkozefirMessageReceiverSender {
 
     public Optional<Response> getStandardDigitalCentralIfAvailable() {
         return sendAndReceiveMessage(new ParameterRequestCreator().create(null, digitalStandardCentralName));
+    }
+
+//TODO: FIX    
+    private boolean isParameterRequest(MobileCommand command) {
+        byte[] commandBytes = command.getCommand();
+        return commandBytes[0] == firstByteOfParameterRequest && commandBytes[1] == secondByteOfParameterRequest;
     }
 }
