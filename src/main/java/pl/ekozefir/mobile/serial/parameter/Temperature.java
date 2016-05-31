@@ -39,6 +39,16 @@ public class Temperature {
                 value = Optional.empty();
         }
     }
+    
+    public Temperature(Float temperature){
+        this.status = TempSensorStatus.OK;
+        this.value = Optional.of(temperature);
+    }
+    
+    public Temperature(TempSensorStatus status){
+        this.status = status;
+        this.value = Optional.empty();
+    }
 
     public TempSensorStatus getStatus() {
         return status;

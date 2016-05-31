@@ -25,13 +25,13 @@ import static pl.ekozefir.mobile.serial.parameter.OnOff.ON;
  * @author Michal Marasz
  */
 public class ProportionStateParser implements MobileParser<OnOff> {
-
+    
     private static final InverseEnumMap<OnOff, Integer> values = new InverseEnumMapToValue(
             Maps.immutableEnumMap(ImmutableMap.of(
                     ON, 1, OFF, 0
             ))
     );
-    private static final int byteNumber = 48;
+    private static final int byteNumber = 37;
     private static final int bitShift = 3;
     private static final int bitMask = 1;
 

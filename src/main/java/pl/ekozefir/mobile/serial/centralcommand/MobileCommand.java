@@ -35,9 +35,14 @@ public class MobileCommand {
     public byte[] getCommand() {
         return Arrays.copyOf(command, command.length);
     }
-    
-    public char getCentralId(){
+
+    public char getCentralId() {
         return centralId;
     }
-    
+
+    @Override
+    public String toString() {
+        return "MobileCommand{" + "command=" + command + ", centralId=" + centralId + '}';
+    }
+
 }

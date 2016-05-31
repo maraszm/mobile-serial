@@ -12,7 +12,7 @@ package pl.ekozefir.mobile.serial.centralcommand;
 
 /**
  *
- * @author Michal Marasz  
+ * @author Michal Marasz
  */
 public class MessageBuilder {
 
@@ -68,6 +68,11 @@ public class MessageBuilder {
 
     public MessageBuilder appendSecondParameter(int parameter) {
         this.secondParam = (byte) parameter;
+        return this;
+    }
+
+    public MessageBuilder appendThirdParameter(int parameter) {
+        this.thirdParam = (byte) parameter;
         return this;
     }
 

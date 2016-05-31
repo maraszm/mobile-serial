@@ -30,10 +30,12 @@ public class ProportionCreator implements MobileCreator<OnOff> {
             OFF, 0x00, ON, 0x01
     ));
     private static final int type = 0x0F;
+    private static final int defaultValue = 20;    
     
     @Override
     public MobileCommand create(OnOff mobileParameter, char centralId) {
-        return MessageBuilder.setType(type, centralId).appendFirstParameter(values.get(mobileParameter)).build();
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(values.get(mobileParameter)).
+                appendSecondParameter(defaultValue).appendThirdParameter(defaultValue).build();
     }
     
 }

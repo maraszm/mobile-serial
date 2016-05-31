@@ -11,6 +11,7 @@
 package pl.ekozefir.mobile.serial;
 
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -33,11 +34,21 @@ import pl.ekozefir.mobile.serial.connection.RawSerialConnectionWithTries;
 public final class EkozefirCentralReceiverSender {
 
     private static final Logger log = Logger.getLogger(EkozefirCentralReceiverSender.class);
-    private static final int timeout = 20;
+    private static int timeout;// = 20;
     private final EkozefirMessageReceiverSender receiverSender;
     private ExecutorService service;
 
     public EkozefirCentralReceiverSender(final int baud, final String device) {
+        timeout = 20;
+        this.receiverSender = new EkozefirMessageReceiverSender(
+                new EkozefirSerialConnection(
+                        new EkozefirByteReceiverSender(
+                                new RawSerialConnectionWithTries(
+                                        new RawSerialConnection(baud, device)))));
+    }
+
+    public EkozefirCentralReceiverSender(final int baud, final String device, int timeout) {
+        this.timeout = timeout;
         this.receiverSender = new EkozefirMessageReceiverSender(
                 new EkozefirSerialConnection(
                         new EkozefirByteReceiverSender(
@@ -61,19 +72,34 @@ public final class EkozefirCentralReceiverSender {
         service.submit(() -> receiverSender.sendMessage(command));
     }
 
+    public Optional<Response> receiveCentralResponse(){
+        Future<Optional<Response>> message = service.submit(() -> {
+            return receiverSender.getStandardDigitalCentralIfAvailable();
+        });
+        try {
+             return message.get(timeout, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
+            log.error("Error while sending message", ex);
+            message.cancel(true);
+            return Optional.empty();
+        }        
+    }
+    
     public List<Response> receiveCentralList() {
         Future<List<Response>> message = service.submit(() -> {
             Optional<Response> maybeStandardDigital = receiverSender.getStandardDigitalCentralIfAvailable();
             if (maybeStandardDigital.isPresent()) {
                 return Arrays.asList(maybeStandardDigital.get());
-            } else {
+            } 
+            else {
                 return receiverSender.getEkotouchCentrals();
             }
         });
         try {
-            return message.get(timeout, TimeUnit.SECONDS);
+             return message.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException ex) {
             log.error("Error while sending message", ex);
+            message.cancel(true);
             return Lists.newArrayList();
         }
     }

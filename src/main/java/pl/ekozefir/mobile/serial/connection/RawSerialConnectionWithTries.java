@@ -21,7 +21,7 @@ public final class RawSerialConnectionWithTries implements SerialConnection {
 
     private static final Logger log = Logger.getLogger(RawSerialConnectionWithTries.class);
     private static final int tries = 5;
-    private static final int waitingTime = 100;
+    private static final int waitingTime = 250;
     private final RawSerialConnection connection;
 
     public RawSerialConnectionWithTries(RawSerialConnection connection) {

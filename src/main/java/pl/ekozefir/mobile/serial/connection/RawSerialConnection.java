@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import static pl.ekozefir.mobile.serial.connection.SerialConnectionHelper.toStringFromUnsigned;
 

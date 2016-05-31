@@ -26,26 +26,31 @@ import pl.ekozefir.mobile.serial.centralstate.Response;
  * @author Michal Marasz
  */
 public final class EkozefirMessageReceiverSender {
-
+    
     private static final Logger log = Logger.getLogger(EkozefirMessageReceiverSender.class);
     private static final List<Character> ekotouchCentralNames = Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H');
     private static final char digitalStandardCentralName = 'X';
+    private static final ParameterRequestCreator request = new ParameterRequestCreator();
     //TODO: FIX
     private static final byte firstByteOfParameterRequest = (byte) 0xAA;
     //TODO: FIX
     private static final byte secondByteOfParameterRequest = (byte) 0x55;
     private final EkozefirSerialConnection serial;
-
+    
     public EkozefirMessageReceiverSender(final EkozefirSerialConnection serial) {
         this.serial = serial;
     }
-
-    public Optional<Response> sendAndReceiveMessage(final MobileCommand command) {
+    
+    public Optional<Response> sendAndReceiveMessageWithCentralChange(final MobileCommand command) {
         log.debug("Try to send and receive message");
         if (!isParameterRequest(command)) {
             log.debug("Send message for change central");
             serial.sendMessage(new ChangeCentralCreator().create(null, command.getCentralId()));
         }
+        return sendAndReceiveMessage(command);
+    }
+    
+    public Optional<Response> sendAndReceiveMessage(final MobileCommand command) {
         log.debug("Sending message");
         serial.sendMessage(command);
         if (isParameterRequest(command)) {
@@ -64,34 +69,45 @@ public final class EkozefirMessageReceiverSender {
         }
         return Optional.empty();
     }
-
+    
     public void sendMessage(final MobileCommand command) {
         serial.sendMessage(command);
     }
-
+    
+    public void sendMessageWithCentralChange(final MobileCommand command) {
+        log.debug("Try to send and message");
+        if (!isParameterRequest(command)) {
+            log.debug("Send message for change central");
+            serial.sendMessage(new ChangeCentralCreator().create(null, command.getCentralId()));
+        }
+        sendMessage(command);
+    }
+    
     public void start() {
         serial.connect();
     }
-
+    
     public void stop() {
         serial.disconnect();
     }
-
+    
     public List<Response> getEkotouchCentrals() {
         return ekotouchCentralNames.stream().
-                map((centralName) -> sendAndReceiveMessage(new ParameterRequestCreator().create(null, centralName))).
+                map((centralName) -> sendAndReceiveMessage(request.create(null, centralName))).
                 filter(optional -> optional.isPresent()).
                 map(optional -> optional.get()).
                 collect(Collectors.toCollection(ArrayList::new));
     }
-
+    
     public Optional<Response> getStandardDigitalCentralIfAvailable() {
-        return sendAndReceiveMessage(new ParameterRequestCreator().create(null, digitalStandardCentralName));
+        return sendAndReceiveMessage(request.create(null, digitalStandardCentralName));
     }
 
 //TODO: FIX    
     private boolean isParameterRequest(MobileCommand command) {
         byte[] commandBytes = command.getCommand();
+        log.debug("Is mobile command request " + commandBytes[0] + " " + commandBytes[1]);
+        log.debug("equal " + firstByteOfParameterRequest + " " + secondByteOfParameterRequest);
         return commandBytes[0] == firstByteOfParameterRequest && commandBytes[1] == secondByteOfParameterRequest;
     }
 }
