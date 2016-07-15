@@ -11,7 +11,6 @@
 package pl.ekozefir.mobile.serial;
 
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -70,6 +69,10 @@ public final class EkozefirCentralReceiverSender {
 
     public void sendMessage(MobileCommand command) {
         service.submit(() -> receiverSender.sendMessage(command));
+    }
+    
+    public void sendMessageWithCentralChange(MobileCommand command) {
+        service.submit(() -> receiverSender.sendMessageWithCentralChange(command));
     }
 
     public Optional<Response> receiveCentralResponse(){

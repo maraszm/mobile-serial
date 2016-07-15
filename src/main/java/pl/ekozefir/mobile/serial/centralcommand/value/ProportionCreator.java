@@ -19,12 +19,13 @@ import pl.ekozefir.mobile.serial.centralcommand.MobileCreator;
 import pl.ekozefir.mobile.serial.parameter.OnOff;
 import static pl.ekozefir.mobile.serial.parameter.OnOff.OFF;
 import static pl.ekozefir.mobile.serial.parameter.OnOff.ON;
+import pl.ekozefir.mobile.serial.parameter.Proportion;
 
 /**
  *
  * @author Michal Marasz
  */
-public class ProportionCreator implements MobileCreator<OnOff> {
+public class ProportionCreator implements MobileCreator<Proportion> {
     
     private static final Map<OnOff, Integer> values = Maps.immutableEnumMap(ImmutableMap.of(
             OFF, 0x00, ON, 0x01
@@ -33,9 +34,9 @@ public class ProportionCreator implements MobileCreator<OnOff> {
     private static final int defaultValue = 20;    
     
     @Override
-    public MobileCommand create(OnOff mobileParameter, char centralId) {
-        return MessageBuilder.setType(type, centralId).appendFirstParameter(values.get(mobileParameter)).
-                appendSecondParameter(defaultValue).appendThirdParameter(defaultValue).build();
+    public MobileCommand create(Proportion mobileParameter, char centralId) {
+        return MessageBuilder.setType(type, centralId).appendFirstParameter(values.get(mobileParameter.getIsProportionWorking())).
+                appendSecondParameter(mobileParameter.getSupply()).appendThirdParameter(mobileParameter.getExtract()).build();
     }
     
 }
