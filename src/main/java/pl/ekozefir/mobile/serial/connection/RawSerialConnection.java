@@ -20,9 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
-import java.util.logging.Level;
+import javax.sql.rowset.serial.SerialException;
 import org.apache.log4j.Logger;
 import static pl.ekozefir.mobile.serial.connection.SerialConnectionHelper.toStringFromUnsigned;
+import pl.ekozefir.mobile.serial.exception.SerialConnectionError;
 
 /**
  *
@@ -55,6 +56,7 @@ public final class RawSerialConnection implements SerialConnection {
             out = serialPort.getOutputStream();
         } catch (NoSuchPortException | UnsupportedCommOperationException | PortInUseException | IOException ex) {
             log.error("Error while connecting rs232 driver", ex);
+            throw new SerialConnectionError(ex);
         }
     }
 
@@ -75,6 +77,7 @@ public final class RawSerialConnection implements SerialConnection {
             in = null;
         } catch (IOException ex) {
             log.error("Could not disconnect driver", ex);
+            throw new SerialConnectionError(ex);
         }
         log.debug("Disconnected driver");
     }
@@ -95,7 +98,8 @@ public final class RawSerialConnection implements SerialConnection {
             return Optional.empty();
         } catch (IOException ex) {
             log.error("Error while receiving bytes", ex);
-            return Optional.empty();
+            throw new SerialConnectionError(ex);
+//            return Optional.empty();
         }
     }
 
@@ -110,6 +114,7 @@ public final class RawSerialConnection implements SerialConnection {
             out.flush();
         } catch (InterruptedException | IOException ex) {
             log.error("Error while sending bytes to driver", ex);
+            throw new SerialConnectionError(ex);
         }
     }
 }
