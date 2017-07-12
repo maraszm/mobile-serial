@@ -102,6 +102,7 @@ public final class EkozefirCentralReceiverSender {
              return message.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException ex) {
             log.error("Error while sending message", ex);
+            //TODO: CHECK
             message.cancel(true);
             return Lists.newArrayList();
         }

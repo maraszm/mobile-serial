@@ -45,4 +45,32 @@ public class MobileCommand {
         return "MobileCommand{" + "command=" + command + ", centralId=" + centralId + '}';
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + Arrays.hashCode(this.command);
+        hash = 67 * hash + this.centralId;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MobileCommand other = (MobileCommand) obj;
+        if (!Arrays.equals(this.command, other.command)) {
+            return false;
+        }
+        if (this.centralId != other.centralId) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+
 }

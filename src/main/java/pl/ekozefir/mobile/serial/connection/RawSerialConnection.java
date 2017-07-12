@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
-import javax.sql.rowset.serial.SerialException;
 import org.apache.log4j.Logger;
 import static pl.ekozefir.mobile.serial.connection.SerialConnectionHelper.toStringFromUnsigned;
 import pl.ekozefir.mobile.serial.exception.SerialConnectionError;
@@ -47,13 +46,14 @@ public final class RawSerialConnection implements SerialConnection {
     public void connect() {
         CommPortIdentifier portIdentifier;
         try {
-            portIdentifier = CommPortIdentifier
-                    .getPortIdentifier(portName);
+            log.debug("Connecting to port: " + portName);
+            portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
             CommPort commPort = portIdentifier.open(this.getClass().getName(), 2000);
             serialPort = (SerialPort) commPort;
             serialPort.setSerialPortParams(baud, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
             in = serialPort.getInputStream();
             out = serialPort.getOutputStream();
+            log.debug("Connection rs232 established");
         } catch (NoSuchPortException | UnsupportedCommOperationException | PortInUseException | IOException ex) {
             log.error("Error while connecting rs232 driver", ex);
             throw new SerialConnectionError(ex);
@@ -75,6 +75,7 @@ public final class RawSerialConnection implements SerialConnection {
             }
             serialPort = null;
             in = null;
+            log.debug("Disconnected from driver");
         } catch (IOException ex) {
             log.error("Could not disconnect driver", ex);
             throw new SerialConnectionError(ex);
